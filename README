@@ -1,0 +1,10 @@
+Examples
+========
+
+A group of new,clean examples that demonstrate EFL in various languages.
+EFL usage in here should be using the latest APIs where possible and use supported languages and build systems.
+
+For C we are using meson to build - if you have Edi installed then the edi_build command will work as normal.
+
+Directory naming is <language>-<examplename> please be careful to namespace example binaries in case they are installed by the user.
+
