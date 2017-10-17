@@ -9,7 +9,7 @@ check = dependency('check')
 exe = executable('example-test', src,
   dependencies : [eina, efl, elm, check, example_lib],
   include_directories : inc,
-  install : true
+  install : false
 )
 test('lib test', exe)
 

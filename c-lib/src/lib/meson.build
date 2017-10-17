@@ -8,6 +8,15 @@ lib = library('example', src,
   include_directories : inc,
   install : true
 )
+headers = install_headers('Example.h', subdir : 'example-0')
+
+pkg = import('pkgconfig')
+pkg.generate(libraries : lib,
+             subdirs : ['example-0'],
+             version : '0.1',
+             name : 'libexample',
+             filebase : 'example',
+             description : 'An example library')
 
 example_lib = declare_dependency(
    link_with : lib,
