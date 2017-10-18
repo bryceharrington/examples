@@ -20,7 +20,7 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev)
         printf("Hello %s!\n", (char *) eina_array_data_get(args->argv, 0));
      }
 
-   efl_exit();
+   efl_exit(0);
 }
 EFL_MAIN()
 
