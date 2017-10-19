@@ -3,9 +3,10 @@ src = files([
   'example.c',
 ])
 
-lib = library('example', src,
+lib = shared_library('example', src,
   dependencies : [eina, efl, elm],
   include_directories : inc,
+  version : meson.project_version(),
   install : true
 )
 headers = install_headers('Example.h', subdir : 'example-0')
