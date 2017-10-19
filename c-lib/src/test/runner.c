@@ -29,7 +29,7 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev)
              for (i = 0; i < sizeof (tests) / sizeof (tests[0]); i++)
                fprintf(stdout, "\t%s\n", tests[i].name);
 
-             efl_exit();
+             efl_exit(0);
              return;
           }
      }
@@ -54,8 +54,6 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev)
    failed_count = srunner_ntests_failed(sr);
    srunner_free(sr);
 
-// TODO set the return code somehow
-//   return (failed_count == 0) ? 0 : 255;
-   efl_exit();
+   efl_exit((failed_count == 0) ? 0 : 255);
 }
 EFL_MAIN();
