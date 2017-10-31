@@ -1,7 +1,3 @@
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif
-
 #include "suite.h"
 
 START_TEST (lib_test_basic_call)

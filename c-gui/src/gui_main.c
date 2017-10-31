@@ -1,10 +1,17 @@
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif
+#define EFL_EO_API_SUPPORT 1
+#define EFL_BETA_API_SUPPORT 1
 
 #include <Eina.h>
 #include <Efl.h>
 #include <Elementary.h>
+
+static void
+_gui_editor_changed_cb(void *data, const Efl_Event *event EINA_UNUSED)
+{
+   Eo *editor = data;
+
+   printf("Change recorded: %s\n", efl_text_get(editor));
+}
 
 static void
 _gui_about_clicked_cb(void *data, const Efl_Event *event EINA_UNUSED)
@@ -40,6 +47,8 @@ _gui_setup()
                     efl_ui_text_interactive_editable_set(efl_added, EINA_TRUE),
                     efl_ui_text_scrollable_set(efl_added, EINA_TRUE),
                     efl_pack(box, efl_added));
+   efl_event_callback_add(editor, EFL_UI_TEXT_EVENT_CHANGED_USER,
+                          _gui_editor_changed_cb, editor);
 
    hbox = efl_add(EFL_UI_BOX_CLASS, box,
                  efl_ui_direction_set(efl_added, EFL_UI_DIR_HORIZONTAL),
