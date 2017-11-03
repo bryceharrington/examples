@@ -34,6 +34,32 @@ _obj_create()
 }
 
 static void
+_obj_callback_cb(void *data, const Efl_Event *event)
+{
+   Eo *obj = data;
+
+   printf("Callback %s on object named \"%s\"\n", event->desc->name, efl_name_get(obj));
+}
+
+static void
+_obj_del_cb(void *data, const Efl_Event *event EINA_UNUSED)
+{
+   Eo *obj = data;
+
+   printf("Object named \"%s\" deleted\n", efl_name_get(obj));
+}
+
+static void
+_obj_callbacks(Eo *obj)
+{
+   efl_event_callback_add(obj, EFL_EVENT_CALLBACK_ADD, _obj_callback_cb, obj);
+   efl_event_callback_add(obj, EFL_EVENT_CALLBACK_DEL, _obj_callback_cb, obj);
+   efl_event_callback_add(obj, EFL_EVENT_DEL, _obj_del_cb, obj);
+
+   efl_event_callback_del(obj, EFL_EVENT_CALLBACK_ADD, _obj_callback_cb, obj);
+}
+
+static void
 _obj_del(Eo *parent)
 {
    efl_del(parent);
@@ -51,6 +77,7 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
    obj = _obj_create();
    printf("Object name %s\n", efl_name_get(obj));
 
+   _obj_callbacks(obj);
    _obj_del(obj);
 
    efl_exit(0);
