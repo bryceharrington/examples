@@ -29,19 +29,18 @@ _obj_create()
                        efl_name_set(efl_added, "Child Object 2"));
    efl_wref_add(child, &_ref2);
 
+   printf("Child reference count %d, %d\n", efl_ref_get(_ref1), efl_ref_get(_ref2));
    return obj;
 }
 
 static void
 _obj_del(Eo *parent)
 {
-   printf("Child exists? %d, %d\n", _ref1!=NULL, _ref2!=NULL);
-
    efl_del(parent);
-   printf("Child exists? %d, %d\n", _ref1!=NULL, _ref2!=NULL);
+   printf("New child refcount %d, %d\n", efl_ref_get(_ref1), efl_ref_get(_ref2));
 
    efl_del(_ref2);
-   printf("Child exists? %d, %d\n", _ref1!=NULL, _ref2!=NULL);
+   printf("New child refcount %d, %d\n", efl_ref_get(_ref1), efl_ref_get(_ref2));
 }
 
 EAPI_MAIN void
