@@ -7,66 +7,97 @@
 
 #include <stdlib.h>
 
-Eo *_ref1, *_ref2;
+Eo *_root_ref, *_child1_ref, *_child2_ref;
 
-static Eo *
-_obj_create()
+// Retrieves the name of an object's parent, handling special cases like not
+// having any parent, or the object having been already destroyed.
+static const char*
+_parent_name_get(Eo *obj)
 {
-   Eo *obj, *child;
-   Eina_Bool finalized;
-
-   obj = efl_add(EFL_MODEL_ITEM_CLASS, NULL,
-                 efl_name_set(efl_added, "Parent Object"),
-                 finalized = efl_finalized_get(efl_added));
-   printf("Was the parent final? %d\n", finalized);
-   finalized = efl_finalized_get(obj);
-   printf("Is the parent final now? %d\n", finalized);
-
-   child = efl_add(EFL_MODEL_ITEM_CLASS, obj,
-                   efl_name_set(efl_added, "Child Object 1"));
-   efl_wref_add(child, &_ref1);
-   child = efl_add_ref(EFL_MODEL_ITEM_CLASS, obj,
-                       efl_name_set(efl_added, "Child Object 2"));
-   efl_wref_add(child, &_ref2);
-
-   printf("Child reference count %d, %d\n", efl_ref_get(_ref1), efl_ref_get(_ref2));
-   return obj;
+   // Object has been destroyed
+   if (efl_ref_get(obj) == 0) return "-";
+   // Object has no parent
+   if (efl_parent_get(obj) == NULL) return "none";
+   // Otherwise, return parent's name
+   return efl_name_get(efl_parent_get(obj));
 }
 
+// Prints status of all our objects in a pretty table
 static void
-_obj_callback_cb(void *data EINA_UNUSED, const Efl_Event *event)
+_status_print()
 {
-   Eo *obj = event->object;
-
-   printf("Callback %s on object named \"%s\"\n", event->desc->name, efl_name_get(obj));
+   printf("Object:   %6s %6s %6s\n", "ROOT", "CHILD1", "CHILD2");
+   printf("Refcount: %6d %6d %6d\n",
+          efl_ref_get(_root_ref),
+          efl_ref_get(_child1_ref),
+          efl_ref_get(_child2_ref));
+   printf("Parent:   %6s %6s %6s\n\n",
+          _parent_name_get(_root_ref),
+          _parent_name_get(_child1_ref),
+          _parent_name_get(_child2_ref));
 }
 
+// Gets called whenever an object is deleted
 static void
 _obj_del_cb(void *data EINA_UNUSED, const Efl_Event *event)
 {
    Eo *obj = event->object;
 
-   printf("Object named \"%s\" deleted\n", efl_name_get(obj));
+   printf("Object named \"%s\" has been deleted\n", efl_name_get(obj));
+   _status_print();
 }
 
-static void
-_obj_callbacks(Eo *obj)
+// Create our test hierarchy
+static Eo *
+_obj_create()
 {
-   efl_event_callback_add(obj, EFL_EVENT_CALLBACK_ADD, _obj_callback_cb, NULL);
-   efl_event_callback_add(obj, EFL_EVENT_CALLBACK_DEL, _obj_callback_cb, NULL);
-   efl_event_callback_add(obj, EFL_EVENT_DEL, _obj_del_cb, NULL);
+   Eo *root, *child1, *child2;
+   Eina_Bool finalized;
 
-   efl_event_callback_del(obj, EFL_EVENT_CALLBACK_ADD, _obj_callback_cb, NULL);
+   // First create a root element
+   root = efl_add(EFL_MODEL_ITEM_CLASS, NULL,
+                    efl_name_set(efl_added, "Root"),
+                    finalized = efl_finalized_get(efl_added));
+   printf("Was the root final during construction? %d\n", finalized);
+   finalized = efl_finalized_get(root);
+   printf("Is the root final after construction? %d\n", finalized);
+   // Add a weak reference so we can keep track of its state
+   efl_wref_add(root, &_root_ref);
+   // Register a callback for DELETION events
+   efl_event_callback_add(root, EFL_EVENT_DEL, _obj_del_cb, NULL);
+
+   // Create the first child element
+   child1 = efl_add(EFL_MODEL_ITEM_CLASS, root,
+                    efl_name_set(efl_added, "Child1"));
+   // Add a weak reference so we can keep track of its state
+   efl_wref_add(child1, &_child1_ref);
+   // Register a callback for DELETION events
+   efl_event_callback_add(child1, EFL_EVENT_DEL, _obj_del_cb, NULL);
+
+   // Create the second child element, this time, with an extra reference
+   child2 = efl_add_ref(EFL_MODEL_ITEM_CLASS, root,
+                        efl_name_set(efl_added, "Child2"));
+   // Add a weak reference so we can keep track of its state
+   efl_wref_add(child2, &_child2_ref);
+   // Register a callback for DELETION events
+   efl_event_callback_add(child2, EFL_EVENT_DEL, _obj_del_cb, NULL);
+
+   return root;
 }
 
+// Destroy the test hierarchy
 static void
 _obj_del(Eo *parent)
 {
+   // Destroy the root element
+   printf ("Deleting root...\n");
    efl_del(parent);
-   printf("New child refcount %d, %d\n", efl_ref_get(_ref1), efl_ref_get(_ref2));
+   printf ("After deleting root:\n");
+   _status_print();
 
-   efl_del(_ref2);
-   printf("New child refcount %d, %d\n", efl_ref_get(_ref1), efl_ref_get(_ref2));
+   // Destroy the child2 element, for which we were keeping an extra reference
+   printf ("Deleting Child2...\n");
+   efl_del(_child2_ref);
 }
 
 EAPI_MAIN void
@@ -74,12 +105,19 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
 {
    Eo* obj;
 
+   // Create all objects
    obj = _obj_create();
-   printf("Object name %s\n", efl_name_get(obj));
 
-   _obj_callbacks(obj);
+   printf ("Initial state:\n");
+   _status_print();
+
+   // Destroy all objects
    _obj_del(obj);
 
+   printf ("Final state:\n");
+   _status_print();
+
+   // Exit
    efl_exit(0);
 }
 EFL_MAIN()
