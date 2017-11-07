@@ -79,7 +79,7 @@ _obj_create()
 
 // Destroy the test hierarchy
 static void
-_obj_del()
+_obj_destroy()
 {
    // Destroy the root element
    printf ("Deleting root...\n");
@@ -102,7 +102,7 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
    _status_print();
 
    // Destroy all objects
-   _obj_del();
+   _obj_destroy();
 
    printf ("Final state:\n");
    _status_print();
