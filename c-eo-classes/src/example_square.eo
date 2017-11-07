@@ -1,0 +1,23 @@
+class Example.Square (Example.Rectangle) {
+   [[A square shape object]]
+   eo_prefix: example_square;
+   methods {
+      @property side {
+         [[The length of both sides of this square]]
+         set {
+         }
+         get {
+         }
+         values {
+            size: int; [[Square side length]]
+         }
+      }
+   }
+   implements {
+      class.constructor;
+      class.destructor;
+      Example.Shape.area;
+      Example.Rectangle.width {get; set;}
+      Example.Rectangle.height {get; set;}
+   }
+}

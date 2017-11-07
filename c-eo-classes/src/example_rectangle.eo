@@ -1,0 +1,31 @@
+class Example.Rectangle (Efl.Object, Example.Shape) {
+   [[A rectangle shape object]]
+   eo_prefix: example_rectangle;
+   methods {
+      @property width {
+         [[The width of this rectangle]]
+         set {
+         }
+         get {
+         }
+         values {
+            width: int; [[Rectangle width]]
+         }
+      }
+      @property height {
+         [[The height of this rectangle]]
+         set {
+         }
+         get {
+         }
+         values {
+            height: int; [[Rectangle height]]
+         }
+      }
+   }
+   implements {
+      class.constructor;
+      class.destructor;
+      Example.Shape.area;
+   }
+}
