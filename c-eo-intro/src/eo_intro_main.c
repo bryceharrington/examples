@@ -54,7 +54,7 @@ _obj_create()
 {
    // First create a root element
    _root = efl_add(EFL_MODEL_ITEM_CLASS, NULL,
-                    efl_name_set(efl_added, "Root"));
+                   efl_name_set(efl_added, "Root"));
    // Add a weak reference so we can keep track of its state
    efl_wref_add(_root, &_root_ref);
    // Register a callback for DELETION events
@@ -62,7 +62,7 @@ _obj_create()
 
    // Create the first child element
    _child1 = efl_add(EFL_MODEL_ITEM_CLASS, _root,
-                    efl_name_set(efl_added, "Child1"));
+                     efl_name_set(efl_added, "Child1"));
    // Add a weak reference so we can keep track of its state
    efl_wref_add(_child1, &_child1_ref);
    // Register a callback for DELETION events
@@ -70,7 +70,7 @@ _obj_create()
 
    // Create the second child element, this time, with an extra reference
    _child2 = efl_add_ref(EFL_MODEL_ITEM_CLASS, _root,
-                        efl_name_set(efl_added, "Child2"));
+                         efl_name_set(efl_added, "Child2"));
    // Add a weak reference so we can keep track of its state
    efl_wref_add(_child2, &_child2_ref);
    // Register a callback for DELETION events
