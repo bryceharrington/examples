@@ -52,15 +52,9 @@ _obj_del_cb(void *data EINA_UNUSED, const Efl_Event *event)
 static void
 _obj_create()
 {
-   Eina_Bool finalized;
-
    // First create a root element
    _root = efl_add(EFL_MODEL_ITEM_CLASS, NULL,
-                    efl_name_set(efl_added, "Root"),
-                    finalized = efl_finalized_get(efl_added));
-   printf("Was the root final during construction? %d\n", finalized);
-   finalized = efl_finalized_get(_root);
-   printf("Is the root final after construction? %d\n", finalized);
+                    efl_name_set(efl_added, "Root"));
    // Add a weak reference so we can keep track of its state
    efl_wref_add(_root, &_root_ref);
    // Register a callback for DELETION events
