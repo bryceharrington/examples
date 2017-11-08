@@ -16,7 +16,7 @@ static const char*
 _parent_name_get(Eo *obj)
 {
    // Object has been destroyed
-   if (efl_ref_get(obj) == 0) return "-";
+   if (efl_ref_count(obj) == 0) return "-";
    // Object has no parent
    if (efl_parent_get(obj) == NULL) return "none";
    // Otherwise, return parent's name
@@ -29,9 +29,9 @@ _status_print()
 {
    printf("Object:   %6s %6s %6s\n", "ROOT", "CHILD1", "CHILD2");
    printf("Refcount: %6d %6d %6d\n",
-          efl_ref_get(_root_ref),
-          efl_ref_get(_child1_ref),
-          efl_ref_get(_child2_ref));
+          efl_ref_count(_root_ref),
+          efl_ref_count(_child1_ref),
+          efl_ref_count(_child2_ref));
    printf("Parent:   %6s %6s %6s\n\n",
           _parent_name_get(_root_ref),
           _parent_name_get(_child1_ref),
