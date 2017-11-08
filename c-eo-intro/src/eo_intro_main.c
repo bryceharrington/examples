@@ -83,13 +83,13 @@ _obj_destroy()
 {
    // Destroy the root element
    printf ("Deleting root...\n");
-   efl_del(_root);
+   efl_unref(_root);
    printf ("After deleting root:\n");
    _status_print();
 
    // Destroy the child2 element, for which we were keeping an extra reference
    printf ("Deleting Child2...\n");
-   efl_del(_child2);
+   efl_unref(_child2);
 }
 
 EAPI_MAIN void
