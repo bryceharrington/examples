@@ -6,11 +6,11 @@ EFL usage in here should be using the latest APIs where possible and use support
 
 For C we are using meson to build - the standard steps are:
 
-  * mesin build/
+  * meson build/
   * cd build
   * ninja
 
 if, however, you have Edi installed then the edi_build command will run the appropriate steps automatically.
 
-Directory naming is <language>-<examplename> please be careful to namespace example binaries in case they are installed by the user.
+Directory naming is <type>/<language>/<name> please be careful to namespace example binaries in case they are installed by the user.
 
