@@ -82,9 +82,9 @@ static void
 _obj_destroy()
 {
    // Destroy the root element
-   printf ("Deleting root...\n");
+   printf ("Deleting Root...\n");
    efl_unref(_root);
-   printf ("After deleting root:\n");
+   printf ("After deleting Root:\n");
    _status_print();
 
    // Destroy the child2 element, for which we were keeping an extra reference
