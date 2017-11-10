@@ -1,10 +1,3 @@
-#define EFL_EO_API_SUPPORT 1
-#define EFL_BETA_API_SUPPORT 1
-
-#include <Eina.h>
-#include <Efl.h>
-#include <Elementary.h>
-
 #include "eo_classes.h"
 
 Example_Shape *
