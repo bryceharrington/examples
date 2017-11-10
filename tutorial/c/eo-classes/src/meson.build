@@ -19,6 +19,7 @@ foreach eo : eo_src
 endforeach
 
 src = files([
+  'eo_classes.h',
   'eo_classes_main.c',
 ])
 

@@ -5,9 +5,7 @@
 #include <Efl.h>
 #include <Elementary.h>
 
-#include "example_shape.eo.h"
-#include "example_rectangle.eo.h"
-#include "example_square.eo.h"
+#include "eo_classes.h"
 
 Example_Shape *
 _rect_create()
