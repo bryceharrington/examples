@@ -12,10 +12,11 @@ foreach eo : eo_src
     input : eo_file,
     output : [eo_file + '.h'],
     command : [eolian_gen, '-I', eolian.get_pkgconfig_variable('eoincludedir'),
-                           '-I', meson.source_root() + '/src',
-                           '-gchi', '-o', 'h:' + eo_file + '.h',
-                           '-o', 'i:' + meson.source_root() + '/src/' + eo + '.c',
-                           '-o', 'c:' + eo_file + '.c', '@INPUT@'])
+                           '-I', meson.current_source_dir(),
+                           '-gchi',
+                           '-o', 'i:' + join_paths(meson.current_source_dir(), eo + '.c'),
+                           '-o', 'h:' + join_paths(meson.current_build_dir(), eo_file + '.h'),
+                           '-o', 'c:' + join_paths(meson.current_build_dir(), eo_file + '.c'), '@INPUT@'])
 endforeach
 
 src = files([
