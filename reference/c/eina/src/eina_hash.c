@@ -2,10 +2,8 @@
 #define EFL_BETA_API_SUPPORT 1
 
 #include <stdio.h>
-#include <Eina.h>
 
-#include <Efl.h>
-#include <Elementary.h>
+#include <Efl_Core.h>
 
 static void
 _entry_free_cb(void *data)
