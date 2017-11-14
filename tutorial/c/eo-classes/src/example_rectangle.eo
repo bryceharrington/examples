@@ -1,6 +1,5 @@
 class Example.Rectangle (Efl.Object, Example.Shape) {
    [[A rectangle shape object]]
-   eo_prefix: example_rectangle;
    methods {
       @property width {
          [[The width of this rectangle]]

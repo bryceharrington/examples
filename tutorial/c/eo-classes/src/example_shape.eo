@@ -1,6 +1,5 @@
 interface Example.Shape {
    [[A generic shape object]]
-   eo_prefix: example_shape;
    methods {
       @property color {
          [[The colour that our shape should be filled with]]

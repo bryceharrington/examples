@@ -1,6 +1,5 @@
 class Example.Square (Example.Rectangle) {
    [[A square shape object]]
-   eo_prefix: example_square;
    methods {
       @property side {
          [[The length of both sides of this square]]
