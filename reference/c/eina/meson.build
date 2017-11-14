@@ -1,5 +1,5 @@
 project(
-  'efl-reference-eina-iterator', 'c',
+  'efl-reference-eina', 'c',
   version : '0.0.1',
   default_options: [ 'c_std=gnu99', 'warning_level=2' ],
   meson_version : '>= 0.38.0')
