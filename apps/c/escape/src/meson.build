@@ -1,10 +1,10 @@
 src = files([
-  'gui_main.c',
+  'main.c',
 ])
 
 deps = [eina, efl, elm]
 
-executable('efl_example_gui', src,
+executable('escape', src,
   dependencies : deps,
   include_directories : inc,
   install : true

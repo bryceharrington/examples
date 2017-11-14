@@ -4,6 +4,7 @@
 #include <Eina.h>
 #include <Efl.h>
 #include <Elementary.h>
+#include <Evas.h>
 
 static void
 _gui_editor_changed_cb(void *data, const Efl_Event *event EINA_UNUSED)
@@ -32,16 +33,21 @@ _gui_setup()
 {
    Eo *win, *box, *hbox, *editor, *button;
 
-   // TODO can we have nicer methods like efl_ui_win_add?
    win = efl_add(EFL_UI_WIN_CLASS, NULL,
                  efl_ui_win_type_set(efl_added, EFL_UI_WIN_BASIC),
-                 efl_text_set(efl_added, "Hello World"),
+                 efl_text_set(efl_added, "Escape"),
                  efl_ui_win_autodel_set(efl_added, EINA_TRUE));
 
    box = efl_add(EFL_UI_BOX_CLASS, win,
                 efl_content_set(win, efl_added),
                 efl_gfx_size_hint_min_set(efl_added, EINA_SIZE2D(360, 240)));
 
+   // TODO: efl_ui_bg_class_get() to create a colorable background
+
+   // TODO: Turn this into a canvas
+   //  * Look at the efl_ API docs for any related to canvas
+   //  * I need something like evas_object_vg_add()
+   //  * ./lib/evas/canvas/efl_vg_gradient_linear.eo.h:typedef
    editor = efl_add(EFL_UI_TEXT_CLASS, box,
                     efl_text_set(efl_added, "Edit me"),
                     efl_ui_text_interactive_editable_set(efl_added, EINA_TRUE),
@@ -69,7 +75,6 @@ _gui_setup()
 EAPI_MAIN void
 efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
 {
-   // TODO this to a efl_ui_policy method
    elm_policy_set(ELM_POLICY_QUIT, ELM_POLICY_QUIT_LAST_WINDOW_CLOSED);
 
    _gui_setup();
