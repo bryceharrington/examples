@@ -15,11 +15,11 @@ _print_item(const void *container EINA_UNUSED, void *data, void *fdata EINA_UNUS
 }
 
 static void
-_print_container(Eina_Iterator *it)
+_print_iterator(Eina_Iterator *it)
 {
-   printf("--start--\n");
+   printf("--iterator start--\n");
    eina_iterator_foreach(it, _print_item, NULL);
-   printf("-- end --\n");
+   printf("-- iterator end --\n");
 }
 
 static Eina_Array *
@@ -58,9 +58,9 @@ _create_list()
 
    for (i = 0; i < 4; i++)
      list = eina_list_append(list, more_strings[i]);
- 
+
    return list;
-} 
+}
 
 EAPI_MAIN void
 efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
@@ -69,15 +69,17 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
    Eina_List *list;
    Eina_Iterator *it;
 
+   // create an eina_array and iterate through it's contents
    array = _create_array();
    it = eina_array_iterator_new(array);
-   _print_container(it);
+   _print_iterator(it);
    eina_iterator_free(it);
    eina_array_free(array);
 
+   // perform the dame iteration with an eina_list
    list = _create_list();
    it = eina_list_iterator_new(list);
-   _print_container(it);
+   _print_iterator(it);
    eina_iterator_free(it);
    eina_list_free(list);
 
