@@ -21,5 +21,5 @@ pkg.generate(libraries : lib,
 
 example_lib = declare_dependency(
    link_with : lib,
-   include_directories : [include_directories('./'), inc]
+   include_directories : [include_directories('.'), inc]
 )
