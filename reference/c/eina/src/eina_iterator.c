@@ -68,6 +68,7 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
    Eina_Array *array;
    Eina_List *list;
    Eina_Iterator *it;
+   char *s;
 
    // create an eina_array and iterate through it's contents
    array = _create_array();
@@ -76,14 +77,15 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
    eina_iterator_free(it);
    eina_array_free(array);
 
-   // perform the dame iteration with an eina_list
+   // perform the same iteration with an eina_list but without
+   // using a callback.
    list = _create_list();
    it = eina_list_iterator_new(list);
-   _print_iterator(it);
+   EINA_ITERATOR_FOREACH(it, s)
+     _print_item(eina_iterator_container_get(it), s, NULL);
    eina_iterator_free(it);
    eina_list_free(list);
 
    efl_exit(0);
 }
 EFL_MAIN()
-
