@@ -21,3 +21,9 @@ executable('efl_reference_eina_iterator',
   install : true
 )
 
+executable('efl_reference_eina_hash',
+  files(['eina_hash.c']),
+  dependencies : deps,
+  include_directories : inc,
+  install : true
+)
