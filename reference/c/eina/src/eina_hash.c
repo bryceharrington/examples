@@ -22,20 +22,16 @@ _entry_print(const void *key, void *data)
 static void
 _phonebook_print(Eina_Hash *book)
 {
-   unsigned int count;
+   Eina_Hash_Tuple *t;
    Eina_Iterator *iter;
-   void *data;
+   unsigned int count;
 
    count = eina_hash_population(book);
    printf("Complete phone book (%d):\n", count);
 
    iter = eina_hash_iterator_tuple_new(book);
-   while (eina_iterator_next(iter, &data))
-     {
-	Eina_Hash_Tuple *t = data;
-
-	_entry_print(t->key, t->data);
-     }
+   EINA_ITERATOR_FOREACH(iter, t)
+     _entry_print(t->key, t->data);
    eina_iterator_free(iter);
 
    printf("\n");
@@ -102,4 +98,3 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
    efl_exit(0);
 }
 EFL_MAIN()
-
