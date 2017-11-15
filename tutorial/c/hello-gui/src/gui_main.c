@@ -2,8 +2,8 @@
 #define EFL_BETA_API_SUPPORT 1
 
 #include <Eina.h>
-#include <Efl.h>
 #include <Elementary.h>
+#include <Efl_Ui.h>
 
 static void
 _gui_editor_changed_cb(void *data, const Efl_Event *event EINA_UNUSED)

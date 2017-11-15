@@ -5,8 +5,8 @@ project(
   meson_version : '>= 0.38.0')
 
 eina = dependency('eina', version : '>=1.20.99')
-efl = dependency('efl', version : '>=1.20.99')
-efl_ui = dependency('efl-ui', version : '>=1.20.99')
+efl = dependency('efl-ui', version : '>=1.20.99')
+elm = dependency('elementary', version : '>=1.20.99')
 
 inc = include_directories('.')
 subdir('src')
