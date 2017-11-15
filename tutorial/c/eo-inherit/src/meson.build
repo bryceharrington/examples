@@ -1,6 +1,6 @@
 eolian_gen = find_program('eolian_gen')
 
-eo_src = ['example_rectangle']
+eo_src = ['example_shape', 'example_rectangle', 'example_square']
 eo_csrc = []
 eo_gen = []
 
@@ -20,12 +20,13 @@ foreach eo : eo_src
 endforeach
 
 src = files([
-  'eo_classes_main.c',
+  'eo_inherit.h',
+  'eo_inherit_main.c',
 ])
 
 deps = [eina, efl, elm]
 
-executable('efl_example_eo_classes', src, eo_csrc, eo_gen,
+executable('efl_example_eo_inherit', src, eo_csrc, eo_gen,
   dependencies : deps,
   include_directories : inc,
   install : true

@@ -2,7 +2,7 @@
 #include <Eo.h>
 #include "example_square.eo.h"
 
-#include "eo_classes.h"
+#include "eo_inherit.h"
 
 typedef struct
 {

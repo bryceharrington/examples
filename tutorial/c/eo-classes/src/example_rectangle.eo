@@ -1,30 +1,27 @@
-class Example.Rectangle (Efl.Object, Example.Shape) {
-   [[A rectangle shape object]]
+class Example.Rectangle (Efl.Object) {
    methods {
       @property width {
-         [[The width of this rectangle]]
          set {
          }
          get {
          }
          values {
-            width: int; [[Rectangle width]]
+            width: int;
          }
       }
       @property height {
-         [[The height of this rectangle]]
          set {
          }
          get {
          }
          values {
-            height: int; [[Rectangle height]]
+            height: int;
          }
       }
-   }
-   implements {
-      class.constructor;
-      class.destructor;
-      Example.Shape.area;
+      area {
+         params {
+         }
+         return: int;
+      }
    }
 }
