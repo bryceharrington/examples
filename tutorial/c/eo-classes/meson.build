@@ -5,8 +5,7 @@ project(
   meson_version : '>= 0.38.0')
 
 eina = dependency('eina', version : '>=1.20.99')
-efl = dependency('efl', version : '>=1.20.99')
-elm = dependency('elementary', version : '>=1.20.99')
+efl = dependency('efl-core', version : '>=1.20.99')
 eolian = dependency('eolian', version : '>=1.20.99')
 
 inc = include_directories('.')

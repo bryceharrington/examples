@@ -2,7 +2,7 @@ src = files([
   'lifecycle_main.c',
 ])
 
-deps = [eina, efl, elm]
+deps = [eina, efl]
 
 executable('efl_example_lifecycle', src,
   dependencies : deps,

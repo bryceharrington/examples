@@ -24,7 +24,7 @@ src = files([
   'eo_inherit_main.c',
 ])
 
-deps = [eina, efl, elm]
+deps = [eina, efl]
 
 executable('efl_example_eo_inherit', src, eo_csrc, eo_gen,
   dependencies : deps,

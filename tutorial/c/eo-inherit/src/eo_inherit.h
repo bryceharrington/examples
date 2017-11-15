@@ -7,8 +7,7 @@
 #endif
 
 #include <Eina.h>
-#include <Efl.h>
-#include <Elementary.h>
+#include <Efl_Core.h>
 
 #include "example_shape.eo.h"
 #include "example_rectangle.eo.h"

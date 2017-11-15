@@ -4,7 +4,7 @@ src = files([
 ])
 
 lib = shared_library('example', src,
-  dependencies : [eina, efl, elm],
+  dependencies : [eina, efl],
   include_directories : inc,
   version : meson.project_version(),
   install : true

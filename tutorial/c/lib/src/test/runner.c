@@ -2,7 +2,7 @@
 #define EFL_BETA_API_SUPPORT 1
 
 #include <check.h>
-#include <Elementary.h>
+#include <Efl_Core.h>
 
 #include <Example.h>
 #include "suite.h"

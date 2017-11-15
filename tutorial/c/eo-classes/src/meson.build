@@ -23,7 +23,7 @@ src = files([
   'eo_classes_main.c',
 ])
 
-deps = [eina, efl, elm]
+deps = [eina, efl]
 
 executable('efl_example_eo_classes', src, eo_csrc, eo_gen,
   dependencies : deps,
