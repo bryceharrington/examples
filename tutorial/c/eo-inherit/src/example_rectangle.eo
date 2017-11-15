@@ -23,8 +23,6 @@ class Example.Rectangle (Efl.Object, Example.Shape) {
       }
    }
    implements {
-      class.constructor;
-      class.destructor;
       Example.Shape.area;
    }
 }

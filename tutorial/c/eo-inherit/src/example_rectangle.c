@@ -39,14 +39,4 @@ _example_rectangle_example_shape_area(Eo *obj EINA_UNUSED, Example_Rectangle_Dat
    return pd->width * pd->height;
 }
 
-EOLIAN static void
-_example_rectangle_class_constructor(Efl_Class *klass EINA_UNUSED)
-{
-}
-
-EOLIAN static void
-_example_rectangle_class_destructor(Efl_Class *klass EINA_UNUSED)
-{
-}
-
 #include "example_rectangle.eo.c"

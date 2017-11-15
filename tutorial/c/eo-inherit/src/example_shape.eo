@@ -1,18 +1,6 @@
 interface Example.Shape {
    [[A generic shape object]]
    methods {
-      @property color {
-         [[The colour that our shape should be filled with]]
-         set {
-         }
-         get {
-         }
-         values {
-            r: int; [[Red component color]]
-            g: int; [[Green component color]]
-            b: int; [[Blue component color]]
-         }
-      }
       area {
          [[Calculate the area of the shape.]]
          params {

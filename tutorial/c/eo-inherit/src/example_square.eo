@@ -12,11 +12,4 @@ class Example.Square (Example.Rectangle) {
          }
       }
    }
-   implements {
-      class.constructor;
-      class.destructor;
-      Example.Shape.area;
-      Example.Rectangle.width {get; set;}
-      Example.Rectangle.height {get; set;}
-   }
 }

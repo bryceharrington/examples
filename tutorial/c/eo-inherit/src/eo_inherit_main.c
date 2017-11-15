@@ -1,7 +1,7 @@
 #include "eo_inherit.h"
 
 Example_Shape *
-_rect_create()
+_rectangle_create()
 {
    Example_Rectangle *rectangle;
 
@@ -25,6 +25,18 @@ _square_create()
    return square;
 }
 
+Example_Shape *
+_circle_create()
+{
+   Example_Circle *circle;
+
+   circle = efl_add(EXAMPLE_CIRCLE_CLASS, NULL,
+                    efl_name_set(efl_added, "Circle"),
+                    example_circle_radius_set(efl_added, 5));
+
+   return circle;
+}
+
 void
 _shape_print(Example_Shape *shape)
 {
@@ -36,10 +48,13 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
 {
    Eo *shape;
 
-   shape = _rect_create();
+   shape = _rectangle_create();
    _shape_print(shape);
 
    shape = _square_create();
+   _shape_print(shape);
+
+   shape = _circle_create();
    _shape_print(shape);
 
    efl_exit(0);
