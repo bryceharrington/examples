@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 
+#include <Eina.h>
 #include <Efl_Core.h>
 
 static void

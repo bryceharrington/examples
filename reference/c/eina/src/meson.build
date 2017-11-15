@@ -1,4 +1,4 @@
-deps = [eina, efl, efl_core]
+deps = [eina, efl]
 
 executable('efl_reference_eina_array',
   files(['eina_array.c']),
