@@ -27,3 +27,10 @@ executable('efl_reference_eina_hash',
   include_directories : inc,
   install : true
 )
+
+executable('efl_reference_eina_value',
+  files(['eina_value.c']),
+  dependencies : deps,
+  include_directories : inc,
+  install : true
+)
