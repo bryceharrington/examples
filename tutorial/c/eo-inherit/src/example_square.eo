@@ -1,15 +1,7 @@
 class Example.Square (Example.Rectangle) {
    [[A square shape object]]
-   methods {
-      @property side {
-         [[The length of both sides of this square]]
-         set {
-         }
-         get {
-         }
-         values {
-            size: int; [[Square side length]]
-         }
-      }
+   implements {
+      Example.Rectangle.width {set;}
+      Example.Rectangle.height {set;}
    }
 }

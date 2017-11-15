@@ -20,7 +20,7 @@ _square_create()
 
    square = efl_add(EXAMPLE_SQUARE_CLASS, NULL,
                     efl_name_set(efl_added, "Square"),
-                    example_square_side_set(efl_added, 7));
+                    example_rectangle_width_set(efl_added, 7));
 
    return square;
 }

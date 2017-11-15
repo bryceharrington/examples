@@ -10,16 +10,17 @@ typedef struct
 } Example_Square_Data;
 
 EOLIAN static void
-_example_square_side_set(Eo *obj, Example_Square_Data *pd EINA_UNUSED, int size)
+_example_square_example_rectangle_width_set(Eo *obj, Example_Square_Data *pd EINA_UNUSED, int width)
 {
-   example_rectangle_width_set(obj, size);
-   example_rectangle_height_set(obj, size);
+   example_rectangle_width_set(efl_super(obj, EXAMPLE_SQUARE_CLASS), width);
+   example_rectangle_height_set(efl_super(obj, EXAMPLE_SQUARE_CLASS), width);
 }
 
-EOLIAN static int
-_example_square_side_get(Eo *obj, Example_Square_Data *pd EINA_UNUSED)
+EOLIAN static void
+_example_square_example_rectangle_height_set(Eo *obj, Example_Square_Data *pd EINA_UNUSED, int height)
 {
-   return example_rectangle_width_get(obj);
+   example_rectangle_width_set(efl_super(obj, EXAMPLE_SQUARE_CLASS), height);
+   example_rectangle_height_set(efl_super(obj, EXAMPLE_SQUARE_CLASS), height);
 }
 
 #include "example_square.eo.c"
