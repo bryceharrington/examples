@@ -12,8 +12,48 @@ _entry_free_cb(void *data)
    free(data);
 }
 
+static Eina_Hash *
+_hash_create()
+{
+   Eina_Hash *hash;
+   unsigned int i;
+
+   // let's create a simple hash with integers as keys
+   hash = eina_hash_int32_new(_entry_free_cb);
+
+   // Add initial entries to our hash
+   for (i = 0; i < 10; i++)
+     eina_hash_add(hash, &i, eina_slstr_printf("The number %d", i));
+
+   return hash;
+}
+
 static void
-_entry_print(const void *key, void *data)
+_hash_demo()
+{
+   Eina_Hash *hash;
+   Eina_Iterator *iter;
+   unsigned int *key;
+   const char *value;
+
+   hash = _hash_create();
+
+   iter = eina_hash_iterator_key_new(hash);
+
+   printf("Print contents of int hash\n");
+   EINA_ITERATOR_FOREACH(iter, key)
+   {
+      value = eina_hash_find(hash, key);
+      printf("  Item found with id %d has value %s\n", *key, value);
+   }
+   eina_iterator_free(iter);
+   printf("\n");
+
+   eina_hash_free(hash);
+}
+
+static void
+_phonebook_entry_print(const void *key, void *data)
 {
    printf("  Name: %s\tNumber %s\n", (const char *)key, (char *)data);
 }
@@ -30,14 +70,14 @@ _phonebook_print(Eina_Hash *book)
 
    iter = eina_hash_iterator_tuple_new(book);
    EINA_ITERATOR_FOREACH(iter, t)
-     _entry_print(t->key, t->data);
+     _phonebook_entry_print(t->key, t->data);
    eina_iterator_free(iter);
 
    printf("\n");
 }
 
 static Eina_Hash *
-_hash_create()
+_phonebook_create()
 {
    const char *names[] =
    {
@@ -63,19 +103,19 @@ _hash_create()
    return hash;
 }
 
-EAPI_MAIN void
-efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
+static void
+_phonebook_demo()
 {
    Eina_Hash *phone_book;
    const char *lookup_name = "Ludwig van Beethoven";
    char *number, *old_num;
 
-   phone_book = _hash_create();
+   phone_book = _phonebook_create();
    _phonebook_print(phone_book);
 
    number = eina_hash_find(phone_book, lookup_name);
    printf("Found entry:\n");
-   _entry_print(lookup_name, number);
+   _phonebook_entry_print(lookup_name, number);
    printf("\n");
 
    // Let's first add a new entry
@@ -93,6 +133,13 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
    _phonebook_print(phone_book);
 
    eina_hash_free(phone_book);
+}
+
+EAPI_MAIN void
+efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
+{
+   _hash_demo();
+   _phonebook_demo();
 
    efl_exit(0);
 }
