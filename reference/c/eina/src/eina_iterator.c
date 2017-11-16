@@ -6,6 +6,15 @@
 #include <Eina.h>
 #include <Efl_Core.h>
 
+/*
+ * Eina Iterator examples.
+ *
+ * These examples demonstrate how to work with eina_iterator methods.
+ * Both an eina_list and an eina_array are created and an iterator obtained
+ * for both. You can see how we can use iterators irrespective of the source
+ * and also that there are different ways to work with iterating content.
+ */
+
 static Eina_Bool
 _print_item(const void *container EINA_UNUSED, void *data, void *fdata EINA_UNUSED)
 {

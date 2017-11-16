@@ -6,11 +6,20 @@
 #include <Eina.h>
 #include <Efl_Core.h>
 
+/*
+ * Eina List examples.
+ *
+ * These examples demonstrate how to work with eina_list data and methods.
+ * We create a simple list of names by appending strings to an empty list
+ * and then run various mutations and print each result.
+ */
+
 static Eina_List *
 _list_create()
 {
    Eina_List *list = NULL;
 
+   // passing NULL as the list parameter will create a new list
    list = eina_list_append(list, "Adama");
    list = eina_list_append(list, "Baltar");
    list = eina_list_append(list, "Roslin");

@@ -6,6 +6,17 @@
 #include <Eina.h>
 #include <Efl_Core.h>
 
+/*
+ * Eina Hash examples.
+ *
+ * These examples demonstrate how to work with eina_hash data and methods.
+ *
+ * We have two main hash objects here, firstly an int keyed hash with some
+ * dummy content.
+ * The second example is that of a simple telephone book. The names are the
+ * string keys to the hash with phone numbers in the data field.
+ */
+
 static void
 _entry_free_cb(void *data)
 {
@@ -38,11 +49,13 @@ _hash_demo()
 
    hash = _hash_create();
 
+   // get an iterator of the keys so we can print a line per entry
    iter = eina_hash_iterator_key_new(hash);
 
    printf("Print contents of int hash\n");
    EINA_ITERATOR_FOREACH(iter, key)
    {
+      // look up the value for the key so we can print both
       value = eina_hash_find(hash, key);
       printf("  Item found with id %d has value %s\n", *key, value);
    }
@@ -51,6 +64,8 @@ _hash_demo()
 
    eina_hash_free(hash);
 }
+
+// here we begin the phone book example
 
 static void
 _phonebook_entry_print(const void *key, void *data)
@@ -68,6 +83,7 @@ _phonebook_print(Eina_Hash *book)
    count = eina_hash_population(book);
    printf("Complete phone book (%d):\n", count);
 
+   // this iterator returns the key and value for each entry
    iter = eina_hash_iterator_tuple_new(book);
    EINA_ITERATOR_FOREACH(iter, t)
      _phonebook_entry_print(t->key, t->data);

@@ -6,6 +6,17 @@
 #include <Eina.h>
 #include <Efl_Core.h>
 
+/*
+ * Eina String examples.
+ *
+ * These examples demonstrate how to work with eina_str, eina_strbuf and
+ * eina_stringshare. The eina_str_* methods are helper functions for managing
+ * strings, eina_stringshare provides methods for more easily managing the
+ * memory needed by strings, saving space and speeding up operations.
+ * Lastly eina_strbuf is an API for mutating strings optimally which can then
+ * provide stanard string exports to work with stanard string functions.
+ */
+
 static void
 _string_splitjoin()
 {
@@ -14,11 +25,13 @@ _string_splitjoin()
    char *joined;
    int i;
 
+   // split the string into an array on each occurrence of ";"
    printf("Name list split\n");
    arr = eina_str_split(names, ";", 0);
    for (i = 0; arr[i]; i++)
      printf(" %s\n", arr[i]);
 
+   // Here we re-join two of the strings with a different separator - "&"
    joined = malloc(sizeof(char) * 11);
    eina_str_join_len(joined, 11, '&', arr[0], strlen(arr[0]),
                      arr[1], strlen(arr[1]));
@@ -40,9 +53,10 @@ _string_case()
 
    eina_str_toupper(&str);
    printf(" Upper: %s\n", str);
+   free(str);
+
    eina_str_tolower(&str);
    printf(" Lower: %s\n", str);
-
    free(str);
 }
 
@@ -55,8 +69,11 @@ _string_startend()
    printf("File named %s:\n", file);
    printf(" starts with \"lib\"? %d\n", eina_str_has_prefix(file, "lib"));
    printf(" ends with \"efl.SO\"? %d\n", eina_str_has_suffix(file, "efl.SO"));
+
+   // The has_extension method is like has_suffix but case insensitive
    printf(" has extension \".SO\"? %d\n", eina_str_has_extension(file, ".SO"));
 
+   // we can also copy segments of a string
    start = malloc(sizeof(char) * 7);
    eina_strlcpy(start, file, 7);
    printf(" first 6 chars \"%s\"\n", start);
@@ -70,6 +87,8 @@ _string_escape()
    char *tmp;
 
    str = "Here's some \"example\" text.";
+
+   // backslash escaping a string for use on the command line, for example
    tmp = eina_str_escape(str);
    printf("String: %s\n", str);
    printf("Escaped: %s\n", tmp);
@@ -100,11 +119,14 @@ _string_share()
                        "%s will be revealed.";
    const char *line3 = "There are many copies. And they have a plan.";
 
+   // Creating a new stringshare which is deleted when we are done
+   // If other methods had referenced the string it would not delete immediately
    printf("Line1: %s\n", line1);
    str = eina_stringshare_add_length(line1, 31);
    printf(" limited to %d: %s\n", eina_stringshare_strlen(str), str);
    eina_stringshare_del(str);
 
+   // There are many helpful printf functions for formatting shared strings
    str = eina_stringshare_printf(line2, 12, 3, 4, "four");
    printf("Line2: %s\n", str);
    eina_stringshare_del(str);
@@ -112,6 +134,7 @@ _string_share()
    printf(" format limit (len %d): %s...\n", eina_stringshare_strlen(str), str);
    eina_stringshare_del(str);
 
+   // By replacing a stringshare it applies anywhere that references this share
    printf("Line3: %s\n", line3);
    str = eina_stringshare_add(line3);
    printf(" shared: %s\n", str);
@@ -125,12 +148,13 @@ _string_buf()
 {
    Eina_Strbuf *buf, *substr;
 
+   // populate a new bugger
    buf = eina_strbuf_new();
-
    eina_strbuf_append_length(buf, "BUFFE", 5);
    eina_strbuf_append_char(buf, 'R');
    printf("buffer: %s\n", eina_strbuf_string_get(buf));
 
+   // Demonstrating standard string functions using a strbuf
    eina_strbuf_tolower(buf);
    printf("lower: %s\n", eina_strbuf_string_get(buf));
 
@@ -143,6 +167,7 @@ _string_buf()
    eina_strbuf_reset(buf);
    printf("\n");
 
+   // we can even insert or remove content within the string buffer
    eina_strbuf_append_printf(buf, "%s%c", "buffe", 'r');
    eina_strbuf_insert_printf(buf, " %s: %d", 6, "length", (int)eina_strbuf_length_get(buf));
    printf("printf: %s\n", eina_strbuf_string_get(buf));

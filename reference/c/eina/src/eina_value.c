@@ -6,6 +6,15 @@
 #include <Eina.h>
 #include <Efl_Core.h>
 
+/*
+ * Eina Value examples.
+ *
+ * These examples demonstrate how to work with eina_value data and methods.
+ * Eina_Value is a way to represent and pass data of varying types and to
+ * convert efficiently between them..
+ * Eina_Value can even define structs for managing more complex requirements.
+ */
+
 static void
 _value_int()
 {
@@ -13,11 +22,13 @@ _value_int()
    char *str;
    int i;
 
+   // Setting up an integer value type
    eina_value_setup(&int_val, EINA_VALUE_TYPE_INT);
    eina_value_set(&int_val, 123);
    eina_value_get(&int_val, &i);
    printf("int_val value is %d\n", i);
 
+   // It can easily be converted it to a string
    str = eina_value_to_string(&int_val);
    printf("int_val to string is \"%s\"\n", str);
    free(str); // it was allocated by eina_value_to_string()
@@ -31,11 +42,14 @@ _value_string()
    const char *str;
    char *newstr;
 
+   // Setting up an integer value type
    eina_value_setup(&str_val, EINA_VALUE_TYPE_STRING);
    eina_value_set(&str_val, "My string");
    eina_value_get(&str_val, &str);
    printf("str_val value is \"%s\" (pointer: %p)\n", str, str);
 
+   // To string here will copy the data, so we still need to free it
+   // Notice that the pointer is different on the returned string
    newstr = eina_value_to_string(&str_val);
    printf("str_val to string is \"%s\" (pointer: %p)\n", newstr, newstr);
    free(newstr); // it was allocated by eina_value_to_string()
@@ -49,6 +63,7 @@ _value_convert()
    int i;
    char *str;
 
+   // set up string and int types to convert between
    eina_value_setup(&str_val, EINA_VALUE_TYPE_STRING);
    eina_value_setup(&int_val, EINA_VALUE_TYPE_INT);
 
@@ -86,6 +101,7 @@ _value_struct_define()
      EINA_VALUE_STRUCT_MEMBER(NULL, Struct, chr)
    };
 
+   // set up the members and describe the struct parameters
    members[0].type = EINA_VALUE_TYPE_INT;
    members[1].type = EINA_VALUE_TYPE_CHAR;
    static Eina_Value_Struct_Desc desc = {
@@ -121,6 +137,7 @@ _value_struct_print(Eina_Value *struct_val)
    printf("  num: %d\n", num);
    printf("  chr: %c\n", chr);
 
+   // we can check if a struct contains a field before working with it
    if (eina_value_struct_get(struct_val, "missing", &num))
      printf(  "missing: %d\n", num);
 }

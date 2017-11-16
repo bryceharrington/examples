@@ -2,9 +2,20 @@
 #define EFL_BETA_API_SUPPORT 1
 
 #include <stdio.h>
+#include <sys/time.h>
 
 #include <Eina.h>
 #include <Efl_Core.h>
+
+/*
+ * Eina Value custom examples.
+ *
+ * Eina_Value allows the definition of custom types which can be passed like
+ * any other Eina_Value. This example defines a custom timezone type and all
+ * the methods that must be implemented for a custom type.
+ * As this encapsulates the system timezone struct we initialise it from
+ * the gettimeofday method..
+ */
 
 static Eina_Bool
 _tz_setup(const Eina_Value_Type *type, void *mem)

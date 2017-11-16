@@ -6,9 +6,18 @@
 #include <Eina.h>
 #include <Efl_Core.h>
 
+/*
+ * Eina Array examples.
+ *
+ * These examples demonstrate how to work with eina_array data and methods.
+ * We use a simple array of strings to initialise our eina_array before
+ * performing various mutations and printing the results.
+ */
+
 static Eina_Array *
 _array_create()
 {
+   // some content to populate our array
    const char *names[] =
    {
       "helo", "hera", "starbuck", "kat", "boomer",
@@ -20,7 +29,8 @@ _array_create()
    Eina_Array *array;
    unsigned int i;
 
-   array = eina_array_new(20);
+   // set up an array with a growth step to give a little headroom
+   array = eina_array_new(25);
    for (i = 0; i < 20; i++)
      eina_array_push(array, strdup(names[i]));
 
@@ -33,6 +43,7 @@ static void _array_free(Eina_Array *array)
    char *item;
    unsigned int i;
 
+   // free each item in our array and then free the array itself
    EINA_ARRAY_ITER_NEXT(array, i, item, iterator)
      free(item);
    eina_array_free(array);
@@ -41,6 +52,7 @@ static void _array_free(Eina_Array *array)
 static Eina_Bool
 _item_print(const void *container EINA_UNUSED, void *data, void *fdata EINA_UNUSED)
 {
+   // we know our content is just strings so we can simply printf the data
    printf("  %s\n", (char *)data);
    return EINA_TRUE;
 }
@@ -51,6 +63,7 @@ _item_keep(void *data, void *gdata EINA_UNUSED)
    const char *name;
    name = (const char *)data;
 
+   // let's keep any strings that are no more than 7 characters long
    if (strlen(name) <= 7)
       return EINA_TRUE;
 
