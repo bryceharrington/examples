@@ -34,3 +34,10 @@ executable('efl_reference_eina_value',
   include_directories : inc,
   install : true
 )
+
+executable('efl_reference_eina_value_custom',
+  files(['eina_value_custom.c']),
+  dependencies : deps,
+  include_directories : inc,
+  install : true
+)
