@@ -30,6 +30,8 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
           example_rectangle_height_get(rectangle),
           example_rectangle_area(rectangle));
 
+   efl_unref(rectangle);
+
    efl_exit(0);
 }
 EFL_MAIN()
