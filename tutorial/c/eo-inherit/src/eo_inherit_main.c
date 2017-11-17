@@ -50,12 +50,15 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
 
    shape = _rectangle_create();
    _shape_print(shape);
+   efl_unref(shape);
 
    shape = _square_create();
    _shape_print(shape);
+   efl_unref(shape);
 
    shape = _circle_create();
    _shape_print(shape);
+   efl_unref(shape);
 
    efl_exit(0);
 }
