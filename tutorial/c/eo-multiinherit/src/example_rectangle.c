@@ -2,7 +2,7 @@
 #include <Eo.h>
 #include "example_rectangle.eo.h"
 
-#include "eo_inherit.h"
+#include "eo_multiinherit.h"
 
 typedef struct
 {

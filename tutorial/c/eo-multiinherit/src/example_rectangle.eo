@@ -1,4 +1,4 @@
-class Example.Rectangle (Efl.Object, Example.Shape) {
+class Example.Rectangle (Efl.Object, Example.Shape, Example.Colored) {
    [[A rectangle shape object]]
    methods {
       @property width {

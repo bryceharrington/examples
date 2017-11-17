@@ -1,6 +1,7 @@
 eolian_gen = find_program('eolian_gen')
 
-eo_src = ['example_shape', 'example_rectangle', 'example_square', 'example_circle']
+eo_src = ['example_shape', 'example_colored', 'example_rectangle',
+          'example_square', 'example_circle']
 eo_csrc = []
 eo_gen = []
 
@@ -19,8 +20,8 @@ foreach eo : eo_src
 endforeach
 
 src = files([
-  'eo_inherit.h',
-  'eo_inherit_main.c',
+  'eo_multiinherit.h',
+  'eo_multiinherit_main.c',
 ])
 
 deps = [eina, efl]

@@ -1,0 +1,18 @@
+mixin Example.Colored {
+   [[A mixin for providing APIs for managing colour properties]]
+   methods {
+      @property color {
+         [[The colour to associate with the class we are coloring.
+           We use RGB to manage the colour, so have 3 in and out parameters.]]
+         get {
+         }
+         set {
+         }
+         values {
+            red: int; [[The red colour channel]]
+            green: int; [[The green colour channel]]
+            blue: int; [[The blue colour channel]]
+         }
+      }
+   }
+}
