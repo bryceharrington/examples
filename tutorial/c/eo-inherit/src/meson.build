@@ -1,6 +1,6 @@
 eolian_gen = find_program('eolian_gen')
 
-eo_src = ['example_shape', 'example_rectangle', 'example_square', 'example_circle']
+eo_src = ['example_rectangle', 'example_square']
 eo_csrc = []
 eo_gen = []
 

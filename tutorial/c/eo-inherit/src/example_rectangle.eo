@@ -1,4 +1,4 @@
-class Example.Rectangle (Efl.Object, Example.Shape) {
+class Example.Rectangle (Efl.Object) {
    [[A rectangle shape object]]
    methods {
       @property width {
@@ -21,8 +21,11 @@ class Example.Rectangle (Efl.Object, Example.Shape) {
             height: int; [[Rectangle height]]
          }
       }
-   }
-   implements {
-      Example.Shape.area;
+      area {
+         [[Calculate the area of the shape.]]
+         params {
+         }
+         return: int;
+      }
    }
 }

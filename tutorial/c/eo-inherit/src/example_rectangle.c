@@ -34,7 +34,7 @@ _example_rectangle_height_get(Eo *obj EINA_UNUSED, Example_Rectangle_Data *pd)
 }
 
 EOLIAN static int
-_example_rectangle_example_shape_area(Eo *obj EINA_UNUSED, Example_Rectangle_Data *pd)
+_example_rectangle_area(Eo *obj EINA_UNUSED, Example_Rectangle_Data *pd)
 {
    return pd->width * pd->height;
 }

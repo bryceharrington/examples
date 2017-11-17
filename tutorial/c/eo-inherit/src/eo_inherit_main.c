@@ -1,6 +1,6 @@
 #include "eo_inherit.h"
 
-Example_Shape *
+Example_Rectangle *
 _rectangle_create()
 {
    Example_Rectangle *rectangle;
@@ -13,7 +13,7 @@ _rectangle_create()
    return rectangle;
 }
 
-Example_Shape *
+Example_Rectangle *
 _square_create()
 {
    Example_Square *square;
@@ -25,22 +25,10 @@ _square_create()
    return square;
 }
 
-Example_Shape *
-_circle_create()
-{
-   Example_Circle *circle;
-
-   circle = efl_add(EXAMPLE_CIRCLE_CLASS, NULL,
-                    efl_name_set(efl_added, "Circle"),
-                    example_circle_radius_set(efl_added, 5));
-
-   return circle;
-}
-
 void
-_shape_print(Example_Shape *shape)
+_shape_print(Example_Rectangle *shape)
 {
-   printf("Shape named %s has area %d\n", efl_name_get(shape), example_shape_area(shape));
+   printf("Shape named %s has area %d\n", efl_name_get(shape), example_rectangle_area(shape));
 }
 
 EAPI_MAIN void
@@ -53,10 +41,6 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
    efl_unref(shape);
 
    shape = _square_create();
-   _shape_print(shape);
-   efl_unref(shape);
-
-   shape = _circle_create();
    _shape_print(shape);
    efl_unref(shape);
 
