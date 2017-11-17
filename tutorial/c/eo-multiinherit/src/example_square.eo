@@ -1,0 +1,7 @@
+class Example.Square (Example.Rectangle) {
+   [[A square shape object]]
+   implements {
+      Example.Rectangle.width {set;}
+      Example.Rectangle.height {set;}
+   }
+}

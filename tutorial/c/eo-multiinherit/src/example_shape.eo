@@ -1,0 +1,11 @@
+interface Example.Shape {
+   [[A generic shape object]]
+   methods {
+      area {
+         [[Calculate the area of the shape.]]
+         params {
+         }
+         return: int;
+      }
+   }
+}
