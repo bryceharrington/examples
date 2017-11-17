@@ -6,7 +6,7 @@ project(
 
 eina = dependency('eina', version : '>=1.20.99')
 efl = dependency('efl-core', version : '>=1.20.99')
-eolian = dependency('eolian', version : '>=1.20.99')
+dependency('eolian', version : '>=1.20.99')
 
 inc = include_directories('.')
 subdir('src')
