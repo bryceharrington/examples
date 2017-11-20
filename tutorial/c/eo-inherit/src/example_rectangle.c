@@ -2,8 +2,6 @@
 #include <Eo.h>
 #include "example_rectangle.eo.h"
 
-#include "eo_inherit.h"
-
 typedef struct
 {
    int width, height;

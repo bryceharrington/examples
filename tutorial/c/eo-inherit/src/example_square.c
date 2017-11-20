@@ -1,8 +1,7 @@
 #define EFL_BETA_API_SUPPORT
 #include <Eo.h>
 #include "example_square.eo.h"
-
-#include "eo_inherit.h"
+#include "example_rectangle.eo.h"
 
 typedef struct
 {
