@@ -1,4 +1,10 @@
-#include "eo_inherit.h"
+#define EFL_EO_API_SUPPORT 1
+#define EFL_BETA_API_SUPPORT 1
+
+#include <Eina.h>
+#include <Efl_Core.h>
+#include "example_rectangle.eo.h"
+#include "example_square.eo.h"
 
 Example_Rectangle *
 _rectangle_create()
@@ -13,7 +19,7 @@ _rectangle_create()
    return rectangle;
 }
 
-Example_Rectangle *
+Example_Square *
 _square_create()
 {
    Example_Square *square;
@@ -25,24 +31,28 @@ _square_create()
    return square;
 }
 
-void
-_shape_print(Example_Rectangle *shape)
-{
-   printf("Shape named %s has area %d\n", efl_name_get(shape), example_rectangle_area(shape));
-}
-
 EAPI_MAIN void
 efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
 {
-   Eo *shape;
+   Eo *rectangle, *square;
 
-   shape = _rectangle_create();
-   _shape_print(shape);
-   efl_unref(shape);
+   rectangle = _rectangle_create();
 
-   shape = _square_create();
-   _shape_print(shape);
-   efl_unref(shape);
+   printf("Rectangle is %dx%d, area is %d\n",
+          example_rectangle_width_get(rectangle),
+          example_rectangle_height_get(rectangle),
+          example_rectangle_area(rectangle));
+
+   efl_unref(rectangle);
+
+   square = _square_create();
+
+   printf("Square is %dx%d, area is %d\n",
+          example_rectangle_width_get(square),
+          example_rectangle_height_get(square),
+          example_rectangle_area(square));
+
+   efl_unref(square);
 
    efl_exit(0);
 }

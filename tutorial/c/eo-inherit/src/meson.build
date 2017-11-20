@@ -19,7 +19,6 @@ foreach eo : eo_src
 endforeach
 
 src = files([
-  'eo_inherit.h',
   'eo_inherit_main.c',
 ])
 
