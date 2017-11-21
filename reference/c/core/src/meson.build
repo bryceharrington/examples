@@ -7,16 +7,10 @@ executable('efl_reference_core_loop',
   install : true
 )
 
-executable('efl_reference_core_exe',
-  files(['core_exe.c']),
+executable('efl_reference_core_io',
+  files(['core_io.c']),
   dependencies : deps,
   include_directories : inc,
   install : true
 )
 
-executable('efl_reference_core_thread',
-  files(['core_thread.c']),
-  dependencies : deps,
-  include_directories : inc,
-  install : true
-)
