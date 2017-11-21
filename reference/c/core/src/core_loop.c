@@ -11,7 +11,11 @@
 /*
  * Efl Core Loop examples.
  *
- * TODO
+ * A collection of loop examples. First we print out loop information and
+ * show how loops are inherited.
+ *
+ * Then we move on to the Efl.Loop.Fd and show how you could use a loop to
+ * read or write to an FD without blocking.
  */
 
 static int _count = 0;
