@@ -21,3 +21,10 @@ executable('efl_reference_core_idler',
   install : true
 )
 
+executable('efl_reference_core_poll',
+  files(['core_poll.c']),
+  dependencies : deps,
+  include_directories : inc,
+  install : true
+)
+
