@@ -15,8 +15,6 @@
  * We initiate a timer to exit the idle state and then exit the application
  */
 
-Efl_Loop_Timer *_timer;
-
 // the idler enter callback
 static void
 _enter_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
@@ -40,26 +38,29 @@ _idler_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 
 // Our timer callback ticks at the specified interval to interrupt the idle state
 static void
-_timer_cb(void *data, const Efl_Event *event)
+_timer_cb(void *data EINA_UNUSED, const Efl_Event *event)
 {
+   Efl_Loop_Timer *timer;
+
+   timer = event->object;
    printf("TIMER: timer callback called, exiting.\n");
 
-   efl_del(_timer);
+   efl_del(timer);
    efl_exit(0);
 }
 
 EAPI_MAIN void
 efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
 {
-   Eo *loop = ev->object;
+   Efl_Loop *loop = ev->object;
 
    efl_event_callback_add(loop, EFL_LOOP_EVENT_IDLE, _idler_cb, NULL);
    efl_event_callback_add(loop, EFL_LOOP_EVENT_IDLE_ENTER, _enter_cb, NULL);
    efl_event_callback_add(loop, EFL_LOOP_EVENT_IDLE_EXIT, _exit_cb, NULL);
 
-   _timer = efl_add(EFL_LOOP_TIMER_CLASS, loop,
-                    efl_loop_timer_interval_set(efl_added, 0.0005));
-   efl_event_callback_add(_timer, EFL_LOOP_TIMER_EVENT_TICK, _timer_cb, NULL);
+   efl_add(EFL_LOOP_TIMER_CLASS, loop,
+           efl_loop_timer_interval_set(efl_added, 0.0005),
+           efl_event_callback_add(efl_added, EFL_LOOP_TIMER_EVENT_TICK, _timer_cb, NULL));
 }
 EFL_MAIN()
 
