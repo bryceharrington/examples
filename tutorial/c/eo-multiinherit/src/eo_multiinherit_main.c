@@ -1,6 +1,11 @@
+#define EFL_EO_API_SUPPORT 1
+#define EFL_BETA_API_SUPPORT 1
+
+#include <Eina.h>
+#include <Efl_Core.h>
 #include "eo_multiinherit.h"
 
-Example_Shape *
+Example_Circle *
 _circle_create()
 {
    Example_Circle *circle;
@@ -12,7 +17,7 @@ _circle_create()
    return circle;
 }
 
-Example_Shape *
+Example_Rectangle *
 _rectangle_create()
 {
    Example_Rectangle *rectangle;
@@ -20,30 +25,30 @@ _rectangle_create()
    rectangle = efl_add(EXAMPLE_RECTANGLE_CLASS, NULL,
                        efl_name_set(efl_added, "Rectangle"),
                        example_rectangle_width_set(efl_added, 5),
-                       example_rectangle_height_set(efl_added, 10));
+                       example_rectangle_height_set(efl_added, 10),
+                       example_colored_color_set(efl_added, 255, 0, 0));
 
-   example_colored_color_set(rectangle, 255, 0, 0);
    return rectangle;
 }
 
-Example_Shape *
+Example_Square *
 _square_create()
 {
    Example_Square *square;
 
    square = efl_add(EXAMPLE_SQUARE_CLASS, NULL,
                     efl_name_set(efl_added, "Square"),
-                    example_rectangle_width_set(efl_added, 7));
+                    example_rectangle_width_set(efl_added, 7),
+                    example_colored_color_set(efl_added, 64, 64, 64));
 
-   example_colored_color_set(square, 64, 64, 64);
    return square;
 }
 
 void
 _shape_print(Example_Shape *shape)
 {
-   printf("Shape named %s has area %d\n", efl_name_get(shape), example_shape_area(shape));
-
+   printf("Shape named %s has area %d\n",
+          efl_name_get(shape), example_shape_area(shape));
    if (efl_isa(shape, EXAMPLE_COLORED_MIXIN))
      {
         int red, green, blue;
