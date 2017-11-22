@@ -14,3 +14,10 @@ executable('efl_reference_core_io',
   install : true
 )
 
+executable('efl_reference_core_idler',
+  files(['core_idler.c']),
+  dependencies : deps,
+  include_directories : inc,
+  install : true
+)
+
