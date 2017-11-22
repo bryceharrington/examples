@@ -1,7 +1,5 @@
 #define EFL_BETA_API_SUPPORT
 #include <Eo.h>
-#include "example_colored.eo.h"
-
 #include "eo_multiinherit.h"
 
 typedef struct
