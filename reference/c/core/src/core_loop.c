@@ -18,8 +18,7 @@
  * read or write to an FD without blocking.
  */
 
-static int _count = 0;
-static void _loop_fd_read();
+static void _read_loop_create();
 
 static void
 _print_loop(Efl_Loop *loop, const char *label)
@@ -28,36 +27,20 @@ _print_loop(Efl_Loop *loop, const char *label)
 }
 
 static void
-_loop_current(Efl_Loop *current)
-{
-   Efl_Loop *loop;
-
-   loop = current;
-   _print_loop(loop, "Current");
-   loop = efl_loop_main_get(current);
-   _print_loop(loop, "Application Main");
-
-   loop = efl_add(EFL_LOOP_USER_CLASS, NULL,
-                  efl_name_set(efl_added, "User Loop"));
-   _print_loop(loop, "Child");
-   efl_del(loop);
-}
-
-static void
 _loop_fd_read_cb(void *data EINA_UNUSED, const Efl_Event *event)
 {
-   Efl_Loop_Fd *fd;
+   Efl_Loop_Fd *loop_fd;
    char buf[7];
    int len;
 
-   fd = event->object;
+   loop_fd = event->object;
 
-   len = read(efl_loop_fd_file_get(fd), &buf, sizeof(buf));
+   len = read(efl_loop_fd_file_get(loop_fd), &buf, sizeof(buf));
 
    // here we are exiting
    if (len <= 0)
      {
-        efl_del(fd);
+        efl_del(loop_fd);
         unlink(FILENAME);
 
         efl_exit(0);
@@ -65,53 +48,53 @@ _loop_fd_read_cb(void *data EINA_UNUSED, const Efl_Event *event)
      }
 
    buf[len] = 0;
-   printf("READ %s", buf);
+   _print_loop(loop_fd, "Reading from");
 }
 
 static void
 _loop_fd_write_cb(void *data EINA_UNUSED, const Efl_Event *event)
 {
-   Efl_Loop_Fd *fd;
+   Efl_Loop_Fd *loop_fd;
+   static int _count = 0;
 
-   fd = event->object;
+   loop_fd = event->object;
 
    // we have outputted all we want to, remove the write handler
    // start checking for read availability instead
    if (_count >= 5)
      {
-        efl_del(fd);
+        efl_del(loop_fd);
 
-        _loop_fd_read();
+        _read_loop_create();
         return;
      }
 
    _count++;
-   printf("WRITING %d\n", _count);
-   write(efl_loop_fd_file_get(fd), eina_slstr_printf("TEST %d\n", _count), 7);
+   _print_loop(loop_fd, "Writing from");
+   write(efl_loop_fd_file_get(loop_fd), eina_slstr_printf("TEST %d\n", _count), 7);
 }
 
 static void
-_loop_fd_write()
+_write_loop_create()
 {
    Efl_Loop_Fd *loop_fd;
    FILE *file;
    int fd;
 
    loop_fd = efl_add(EFL_LOOP_FD_CLASS, NULL,
-                  efl_name_set(efl_added, "Write Loop"));
+                     efl_name_set(efl_added, "Write Loop"));
 
    efl_event_callback_add(loop_fd, EFL_LOOP_FD_EVENT_WRITE, _loop_fd_write_cb, NULL);
 
    file = fopen(FILENAME, "w+");
    fd = fileno(file);
 
-   printf("Opened file with fd %d\n", fd);
+   printf("Opened file %s with fd %d\n", FILENAME, fd);
    efl_loop_fd_file_set(loop_fd, fd);
-
 }
 
 static void
-_loop_fd_read()
+_read_loop_create()
 {
    Efl_Loop_Fd *loop_fd;
    FILE *file;
@@ -122,10 +105,10 @@ _loop_fd_read()
 
    efl_event_callback_add(loop_fd, EFL_LOOP_FD_EVENT_READ, _loop_fd_read_cb, NULL);
 
-   file = fopen("/tmp/core_loop_test.txt", "r");
+   file = fopen(FILENAME, "r");
    fd = fileno(file);
 
-   printf("Opened file with fd %d\n", fd);
+   printf("Opened file %s with fd %d\n", FILENAME, fd);
    efl_loop_fd_file_set(loop_fd, fd);
 }
 
@@ -133,17 +116,26 @@ EAPI_MAIN void
 efl_main(void *data EINA_UNUSED, const Efl_Event *ev)
 {
    const Efl_Version *version;
+   Efl_Loop *loop;
 
    version = efl_loop_efl_version_get(ev->object);
-   printf("Running on EFL version %d.%d.%d [%s]\n", version->major, version->minor,
-                                                    version->micro, version->build_id);
+   printf("Running on EFL version %d.%d.%d [%s]\n\n", version->major, version->minor,
+                                                      version->micro, version->build_id);
+
+   loop = ev->object;
+   _print_loop(loop, "Current");
+
+   loop = efl_loop_main_get(loop);
+   _print_loop(loop, "Application Main");
+
+   loop = efl_add(EFL_LOOP_USER_CLASS, loop,
+                  efl_name_set(efl_added, "User Loop"));
+   _print_loop(loop, "Child");
+   efl_del(loop);
    printf("\n");
 
-   _loop_current(ev->object);
-   printf("\n");
-
-   _loop_fd_write();
-   // we will call _loop_fd_read() once write is complete!
+   _write_loop_create();
+   // we will call _read_loop_create() once write is complete!
 
    // we will exit from the end of the read loop
 }
