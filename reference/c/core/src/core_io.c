@@ -38,35 +38,15 @@ EFL_CALLBACKS_ARRAY_DEFINE(copier_cbs,
                            { EFL_IO_COPIER_EVENT_DONE, _copier_done },
                            { EFL_IO_COPIER_EVENT_ERROR, _copier_error });
 
-EAPI void
-efl_pause(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
-{
-}
-
-EAPI void
-efl_resume(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
-{
-}
-
-EAPI void
-efl_terminate(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
-{
-   if (!_copier)
-     return;
-
-   efl_del(efl_io_copier_source_get(_copier));
-   efl_del(efl_io_copier_destination_get(_copier));
-   efl_del(_copier);
-}
-
 EAPI_MAIN void
 efl_main(void *data EINA_UNUSED, const Efl_Event *ev)
 {
    Eo *input, *output, *loop;
 
    /*
-    * some objects such as the Efl.Io.Copier depend on main loop,
-    * thus their parent must be a loop provider. We use the loop itself.
+    * Some objects such as the Efl.Io.Copier require a main loop,
+    * thus their parent must be a loop provider.
+    * We use the application's main loop itself.
     */
    loop = ev->object;
 
@@ -74,7 +54,7 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev)
    input = efl_add(EFL_IO_STDIN_CLASS, loop);
    output = efl_add(EFL_IO_STDOUT_CLASS, loop);
 
-   // copier: set up a copied from input to output
+   // copier: set up a copy from input to output
    _copier = efl_add(EFL_IO_COPIER_CLASS, loop,
                      efl_name_set(efl_added, "Copier"),
                      efl_io_copier_source_set(efl_added, input),
@@ -89,5 +69,5 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *ev)
    printf("Type something here and press enter, it will be copied to stdout...\n");
    printf("  (press Ctrl-D to exit)\n");
 }
-EFL_MAIN_EX()
+EFL_MAIN()
 
