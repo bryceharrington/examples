@@ -6,3 +6,10 @@ executable('efl_reference_ui_sizing',
   include_directories : inc,
   install : true
 )
+
+executable('efl_reference_ui_container',
+  files(['ui_container.c']),
+  dependencies : deps,
+  include_directories : inc,
+  install : true
+)
