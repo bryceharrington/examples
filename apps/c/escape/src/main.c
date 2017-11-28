@@ -31,6 +31,55 @@ void draw_tile(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
    cairo_fill(cr);
 }
 
+void draw_panel(cairo_t *cr, double color, int z0, int z1, int ax, int ay, int bx, int by) {
+  cairo_set_line_width(cr, 0.5);
+  cairo_set_source_rgb(cr, 0.0, 0.0, 0);
+  cairo_move_to(cr, ax - z0, ay - z0);
+  cairo_line_to(cr, ax - z1, ay - z1);
+  cairo_line_to(cr, bx - z1, by - z1);
+  cairo_line_to(cr, bx - z0, by - z0);
+  cairo_close_path(cr);
+  cairo_stroke_preserve(cr);
+  cairo_set_source_rgb(cr, color, color, color);
+  cairo_fill(cr);
+}
+
+void draw_platform(cairo_t *cr, double color, int height, int ax, int ay, int bx, int by) {
+  cairo_set_line_width(cr, 0.5);
+  cairo_set_source_rgb(cr, 0.0, 0.0, 0);
+  cairo_move_to(cr, ax - height, ay - height);
+  cairo_line_to(cr, ax - height, by - height);
+  cairo_line_to(cr, bx - height, by - height);
+  cairo_line_to(cr, bx - height, ay - height);
+  cairo_close_path(cr);
+  cairo_stroke_preserve(cr);
+  cairo_set_source_rgb(cr, color, color, color);
+  cairo_fill(cr);
+}
+
+void draw_wall(cairo_t *cr, int c, int r, int x_inset, int y_inset, int height, int tile_width, int tile_depth) {
+  int x0 = c*tile_width;
+  int y0 = r*tile_depth;
+  int wall_width = tile_width - 2*x_inset;
+  int wall_depth = tile_depth - 2*y_inset;
+
+  // Front Right Side
+  draw_panel(cr, 0.8, 0, height,
+	    x0 + x_inset + wall_width, y0 + y_inset,
+	    x0 + x_inset + wall_width, y0 + y_inset + wall_depth);
+
+  // Front Left Side
+  draw_panel(cr, 0.7, 0, height,
+	    x0 + x_inset,               y0 + y_inset + wall_depth,
+	    x0 + x_inset + wall_width,  y0 + y_inset + wall_depth);
+
+  // Top
+  draw_platform(cr, 0.6, height,
+		x0 + x_inset,              y0 + y_inset,
+		x0 + x_inset + wall_width, y0 + y_inset + wall_depth);
+}
+
+
 static void
 _gui_setup()
 {
@@ -41,6 +90,8 @@ _gui_setup()
    cairo_matrix_t matrix;
    int tile_width = 40;
    int tile_depth = 40;
+   int wall_height = 24;
+   int wall_inset = 12;
 
    win = efl_add(EFL_UI_WIN_CLASS, NULL,
 		 efl_ui_win_type_set(efl_added, EFL_UI_WIN_BASIC),
@@ -72,6 +123,15 @@ _gui_setup()
        draw_tile(cr, c, r, tile_width, tile_depth);
      }
    }
+   draw_wall(cr, 0, 0,          0,          0, wall_height, tile_width, tile_depth); // corner
+   draw_wall(cr, 0, 1, wall_inset,          0, wall_height, tile_width, tile_depth);
+   draw_wall(cr, 0, 2, wall_inset,          0, wall_height, tile_width, tile_depth);
+   draw_wall(cr, 0, 3,          0,          0, wall_height, tile_width, tile_depth); // corner
+   draw_wall(cr, 1, 0,          0, wall_inset, wall_height, tile_width, tile_depth);
+   draw_wall(cr, 1, 3,          0, wall_inset, wall_height, tile_width, tile_depth);
+   draw_wall(cr, 2, 0,          0,          0, wall_height, tile_width, tile_depth); // corner
+   draw_wall(cr, 2, 1, wall_inset,          0, wall_height, tile_width, tile_depth);
+   draw_wall(cr, 2, 3,          0,          0, wall_height, tile_width, tile_depth); // corner
 
    cairo_pixels = cairo_image_surface_get_data(surface);
 
