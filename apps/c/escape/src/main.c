@@ -15,6 +15,22 @@
 static cairo_surface_t *surface;
 static cairo_t *cr;
 
+void draw_tile(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
+   cairo_set_line_width(cr, 0.5);
+   cairo_set_source_rgb(cr, 0.0, 0.0, 0);
+
+   cairo_move_to(cr, c*tile_width, r*tile_depth);
+   cairo_line_to(cr, c*tile_width, (r+1)*tile_depth);
+   cairo_line_to(cr, (c+1)*tile_width, (r+1)*tile_depth);
+   cairo_line_to(cr, (c+1)*tile_width, r*tile_depth);
+   cairo_close_path(cr);
+
+   cairo_stroke_preserve(cr);
+
+   cairo_set_source_rgb(cr, 0.0, 0.4, 0);
+   cairo_fill(cr);
+}
+
 static void
 _gui_setup()
 {
@@ -22,6 +38,9 @@ _gui_setup()
    Evas_Object *source_image;  // TODO: Should Evas_Object* really be an Eo*?
    unsigned char *cairo_pixels;
    unsigned char *efl_pixels;
+   cairo_matrix_t matrix;
+   int tile_width = 40;
+   int tile_depth = 40;
 
    win = efl_add(EFL_UI_WIN_CLASS, NULL,
 		 efl_ui_win_type_set(efl_added, EFL_UI_WIN_BASIC),
@@ -41,9 +60,18 @@ _gui_setup()
 
    surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, WIDTH, HEIGHT);
    cr = cairo_create(surface);
-   cairo_set_source_rgb(cr, 1.0, 0.0, 0.0);
-   cairo_arc(cr, IMAGE_WIDTH / 2, IMAGE_HEIGHT / 2, IMAGE_WIDTH / 4.0, 0.0, 2.0 * M_PI);
-   cairo_fill(cr);
+
+   cairo_matrix_init(&matrix,
+		     1, 0.5,
+		     -1, 0.5,
+		     0, -1);
+   cairo_translate(cr, 400, 50);
+   cairo_transform(cr, &matrix);
+   for (int c=0; c<10; c++) {
+     for (int r=0; r<10; r++) {
+       draw_tile(cr, c, r, tile_width, tile_depth);
+     }
+   }
 
    cairo_pixels = cairo_image_surface_get_data(surface);
 
