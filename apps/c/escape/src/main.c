@@ -12,6 +12,10 @@
 #define WIDTH 800
 #define HEIGHT 640
 
+// Game logic processes at a tick rate of 60 Hz
+// We'll update graphics at the same rate, for 60 FPS
+#define GAME_TICK_INTERVAL (1.0/60.0)
+
 static cairo_surface_t *surface;
 static cairo_t *cr;
 
@@ -78,7 +82,6 @@ void draw_wall(cairo_t *cr, int c, int r, int x_inset, int y_inset, int height, 
 		x0 + x_inset,              y0 + y_inset,
 		x0 + x_inset + wall_width, y0 + y_inset + wall_depth);
 }
-
 
 static void
 _gui_setup()
@@ -160,10 +163,25 @@ _gui_setup()
 }
 
 
-EAPI_MAIN void
-efl_main(void *data EINA_UNUSED, const Efl_Event *ev EINA_UNUSED)
+static void
+_game_tick_cb(void *data EINA_UNUSED, const Efl_Event *event)
 {
+   // Efl_Loop_Timer *timer;
+   // timer = event->object;
+
+   printf("\n[TICK]\n");
+}
+
+EAPI_MAIN void
+efl_main(void *data EINA_UNUSED, const Efl_Event *event)
+{
+   Efl_Loop *loop = event->object;
+
    elm_policy_set(ELM_POLICY_QUIT, ELM_POLICY_QUIT_LAST_WINDOW_CLOSED);
+
+   efl_add(EFL_LOOP_TIMER_CLASS, loop,
+           efl_loop_timer_interval_set(efl_added, GAME_TICK_INTERVAL),
+           efl_event_callback_add(efl_added, EFL_LOOP_TIMER_EVENT_TICK, _game_tick_cb, NULL));
 
    _gui_setup();
 }
