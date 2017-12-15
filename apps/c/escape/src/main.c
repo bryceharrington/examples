@@ -276,8 +276,8 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *event)
    elm_policy_set(ELM_POLICY_QUIT, ELM_POLICY_QUIT_LAST_WINDOW_CLOSED);
 
    efl_add(EFL_LOOP_TIMER_CLASS, loop,
-           efl_loop_timer_interval_set(efl_added, GAME_TICK_INTERVAL),
-           efl_event_callback_add(efl_added, EFL_LOOP_TIMER_EVENT_TICK, _game_tick_cb, NULL));
+	   efl_loop_timer_interval_set(efl_added, GAME_TICK_INTERVAL),
+	   efl_event_callback_add(efl_added, EFL_LOOP_TIMER_EVENT_TICK, _game_tick_cb, NULL));
 
    _gui_setup();
 }
