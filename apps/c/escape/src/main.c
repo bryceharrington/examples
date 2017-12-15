@@ -83,6 +83,99 @@ void draw_wall(cairo_t *cr, int c, int r, int x_inset, int y_inset, int height, 
 		x0 + x_inset + wall_width, y0 + y_inset + wall_depth);
 }
 
+void draw_ball(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
+  double xc = c*tile_width + tile_width/2.0;
+  double yc = r*tile_depth + tile_depth/2.0;
+  cairo_matrix_t matrix;
+
+  // Shadow
+  cairo_arc(cr, xc, yc, tile_width/4.0, 0, 2*M_PI);
+  cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.25);
+  cairo_fill(cr);
+
+  // Ball
+  cairo_save(cr);
+  xc -= tile_width/3.0;
+  yc -= tile_depth/3.0;
+  cairo_user_to_device(cr, &xc, &yc);
+  cairo_identity_matrix(cr);
+  cairo_arc(cr, xc, yc, tile_width/3.0, 0, 2*M_PI);
+  cairo_set_source_rgba(cr, 1.0, 0.0, 0.0, 1.0);
+  cairo_fill(cr);
+  cairo_restore(cr);
+}
+
+void draw_diamond(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
+  double xc = c*tile_width + tile_width/2.0;
+  double yc = r*tile_depth + tile_depth/2.0;
+  cairo_matrix_t matrix;
+
+  // Shadow
+  cairo_arc(cr, xc, yc, tile_width/4.0, 0, 2*M_PI);
+  cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.10);
+  cairo_fill(cr);
+
+  // Diamond
+  cairo_save(cr);
+  xc -= tile_width/8.0;
+  yc -= tile_depth/8.0;
+  cairo_user_to_device(cr, &xc, &yc);
+  cairo_identity_matrix(cr);
+
+  // Diamond Body
+  cairo_move_to(cr, xc, yc);
+  cairo_rel_line_to(cr, -15, -15);
+  cairo_rel_line_to(cr,   5, -10);
+  cairo_rel_line_to(cr,  20,   0);
+  cairo_rel_line_to(cr,   5,  10);
+  cairo_close_path(cr);
+  cairo_set_source_rgba(cr, 0.5, 0.5, 0.9, 0.75);
+  cairo_fill_preserve(cr);
+  cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.75);
+  cairo_stroke(cr);
+
+  // Diamond Top Face
+  cairo_move_to(cr, xc-7, yc-13);
+  cairo_rel_line_to(cr,   5, -12);
+  cairo_rel_line_to(cr,   4,   0);
+  cairo_rel_line_to(cr,   4,  12);
+  cairo_close_path(cr);
+  cairo_set_source_rgba(cr, 0.5, 0.5, 0.9, 0.5);
+  cairo_fill_preserve(cr);
+  cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.5);
+  cairo_stroke(cr);
+
+  // Diamond Bottom Face
+  cairo_move_to(cr, xc, yc);
+  cairo_rel_line_to(cr,  -7, -13);
+  cairo_rel_line_to(cr,  12,   0);
+  cairo_close_path(cr);
+  cairo_set_source_rgba(cr, 0.5, 0.5, 0.9, 0.5);
+  cairo_fill_preserve(cr);
+  cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.5);
+  cairo_stroke(cr);
+
+  // Remaining face 1
+  cairo_move_to(cr, xc-15, yc-15);
+  cairo_rel_line_to(cr,   8,   2);
+  cairo_rel_line_to(cr,  -2,  -12);
+  cairo_close_path(cr);
+  cairo_set_source_rgba(cr, 0.9, 0.9, 0.9, 0.75);
+  cairo_fill_preserve(cr);
+  cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.75);
+  cairo_stroke(cr);
+
+  // Remaining face 2
+  cairo_move_to(cr, xc+15, yc-15);
+  cairo_rel_line_to(cr,  -8,   2);
+  cairo_rel_line_to(cr,   2,  -12);
+  cairo_close_path(cr);
+  cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.5);
+  cairo_stroke(cr);
+
+  cairo_restore(cr);
+}
+
 static void
 _gui_setup()
 {
@@ -135,6 +228,9 @@ _gui_setup()
    draw_wall(cr, 2, 0,          0,          0, wall_height, tile_width, tile_depth); // corner
    draw_wall(cr, 2, 1, wall_inset,          0, wall_height, tile_width, tile_depth);
    draw_wall(cr, 2, 3,          0,          0, wall_height, tile_width, tile_depth); // corner
+
+   draw_ball(cr, 1, 8, tile_width, tile_depth);
+   draw_diamond(cr, 4, 3, tile_width, tile_depth);
 
    cairo_pixels = cairo_image_surface_get_data(surface);
 
