@@ -1,9 +1,8 @@
 This is a simple maze-navigation game provided as a demonstration of:
 
- * Buffer management with Evas
- * Use of vector graphics in EFL with Ector and Cairo
- * Simple entity/component/system (ECS) architecture
- * Running under EFL/X11 and EFL/Wayland
+ * Input handling
+ * Use of Cairo for vector graphics drawing in EFL
+ * Game loop
 
 It is assumed you already are moderately comfortable with:
 
