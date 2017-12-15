@@ -113,7 +113,6 @@ static void
 draw_ball(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
   double xc = c*tile_width + tile_width/2.0;
   double yc = r*tile_depth + tile_depth/2.0;
-  cairo_matrix_t matrix;
 
   // Shadow
   cairo_arc(cr, xc, yc, tile_width/4.0, 0, 2*M_PI);
