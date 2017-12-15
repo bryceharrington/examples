@@ -203,9 +203,9 @@ draw_diamond(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
 }
 
 static void
-_key_down_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
+_key_down_cb(void *data EINA_UNUSED, const Efl_Event *event)
 {
-  char *keys = efl_input_key_compose_get(event->info);
+  const char *keys = efl_input_key_compose_get(event->info);
   if (keys == NULL)
     return;
   switch (keys[0]) {
@@ -335,7 +335,7 @@ _gui_setup()
 }
 
 static void
-_game_tick_cb(void *data EINA_UNUSED, const Efl_Event *event)
+_game_tick_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
 {
    // Efl_Loop_Timer *timer;
    // timer = event->object;
