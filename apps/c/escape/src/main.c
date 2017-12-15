@@ -20,6 +20,8 @@
 #define GAME_TICK_INTERVAL (1.0/60.0)
 
 typedef struct _game {
+  int grid_width;
+  int grid_height;
   int player_c;
   int player_r;
   int goal_c;
@@ -270,8 +272,8 @@ _draw_screen() {
    cairo_paint(cr);
 
    // Draw the grid
-   for (int c=0; c<10; c++) {
-     for (int r=0; r<10; r++) {
+   for (int c=0; c<game.grid_width; c++) {
+     for (int r=0; r<game.grid_height; r++) {
        draw_tile(cr, c, r, tile_width, tile_depth);
      }
    }
@@ -347,9 +349,17 @@ EAPI_MAIN void
 efl_main(void *data EINA_UNUSED, const Efl_Event *event)
 {
    Efl_Loop *loop = event->object;
+   int maze_width = 5;
+   int maze_height = 5;
    maze_t maze;
 
-   create_maze(&maze, 25, 15);
+   create_maze(&maze, maze_width, maze_height);
+
+   // Grid size is 2*W+1, 2*H+1
+   game.grid_width = 2 * maze_width + 1;
+   game.grid_height = 2 * maze_height + 1;
+
+   // TODO: Derive from the maze's solution
    game.player_c = 1;
    game.player_r = 8;
    game.goal_c = 6;
