@@ -30,7 +30,8 @@ extern void print_maze_unicode(maze_t *maze);
 static cairo_surface_t *surface;
 static cairo_t *cr;
 
-void draw_tile(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
+static void
+draw_tile(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
    cairo_set_line_width(cr, 0.5);
    cairo_set_source_rgb(cr, 0.0, 0.0, 0);
 
@@ -46,7 +47,8 @@ void draw_tile(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
    cairo_fill(cr);
 }
 
-void draw_panel(cairo_t *cr, double color, int z0, int z1, int ax, int ay, int bx, int by) {
+static void
+draw_panel(cairo_t *cr, double color, int z0, int z1, int ax, int ay, int bx, int by) {
   cairo_set_line_width(cr, 0.5);
   cairo_set_source_rgb(cr, 0.0, 0.0, 0);
   cairo_move_to(cr, ax - z0, ay - z0);
@@ -59,7 +61,8 @@ void draw_panel(cairo_t *cr, double color, int z0, int z1, int ax, int ay, int b
   cairo_fill(cr);
 }
 
-void draw_platform(cairo_t *cr, double color, int height, int ax, int ay, int bx, int by) {
+static void
+draw_platform(cairo_t *cr, double color, int height, int ax, int ay, int bx, int by) {
   cairo_set_line_width(cr, 0.5);
   cairo_set_source_rgb(cr, 0.0, 0.0, 0);
   cairo_move_to(cr, ax - height, ay - height);
@@ -72,7 +75,8 @@ void draw_platform(cairo_t *cr, double color, int height, int ax, int ay, int bx
   cairo_fill(cr);
 }
 
-void draw_wall(cairo_t *cr, int c, int r, int x_inset, int y_inset, int height, int tile_width, int tile_depth) {
+static void
+draw_wall(cairo_t *cr, int c, int r, int x_inset, int y_inset, int height, int tile_width, int tile_depth) {
   int x0 = c*tile_width;
   int y0 = r*tile_depth;
   int wall_width = tile_width - 2*x_inset;
