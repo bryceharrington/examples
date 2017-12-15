@@ -29,6 +29,7 @@ extern void print_maze_unicode(maze_t *maze);
 
 static cairo_surface_t *surface;
 static cairo_t *cr;
+static game_t game;
 
 static void
 draw_tile(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
@@ -193,6 +194,49 @@ draw_diamond(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
 }
 
 static void
+_key_down_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
+{
+  char *keys = efl_input_key_compose_get(event->info);
+  if (keys == NULL)
+    return;
+  switch (keys[0]) {
+    case 'w':
+    case 'W':
+      printf("UP\n");
+      break;
+    case 'a':
+    case 'A':
+      printf("LEFT\n");
+      break;
+    case 'd':
+    case 'D':
+      printf("RIGHT\n");
+      break;
+    case 's':
+    case 'S':
+      printf("DOWN\n");
+      break;
+    default:
+      printf("key=%s keyname=%s string=%s compose=%s",
+	     efl_input_key_get(event->info),
+	     efl_input_key_name_get(event->info),
+	     efl_input_key_string_get(event->info),
+	     efl_input_key_compose_get(event->info));
+      break;
+    }
+}
+
+static void
+_key_up_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
+{
+   printf("\n");
+}
+
+EFL_CALLBACKS_ARRAY_DEFINE(key_callbacks,
+			   { EFL_EVENT_KEY_DOWN, _key_down_cb },
+			   { EFL_EVENT_KEY_UP, _key_up_cb })
+
+static void
 _gui_setup()
 {
    Eo *win, *box;
@@ -209,6 +253,8 @@ _gui_setup()
 		 efl_ui_win_type_set(efl_added, EFL_UI_WIN_BASIC),
 		 efl_text_set(efl_added, "Escape"),
 		 efl_ui_win_autodel_set(efl_added, EINA_TRUE));
+
+   efl_event_callback_array_add(win, key_callbacks(), NULL);
 
    // Set default window size to our desired geometry
    box = efl_add(EFL_UI_BOX_CLASS, win,
@@ -273,7 +319,6 @@ _gui_setup()
    efl_gfx_buffer_unmap(source_image, slice);
    efl_gfx_buffer_update_add(source_image, NULL);
 }
-
 
 static void
 _game_tick_cb(void *data EINA_UNUSED, const Efl_Event *event)
