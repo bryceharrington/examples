@@ -94,7 +94,8 @@ void draw_wall(cairo_t *cr, int c, int r, int x_inset, int y_inset, int height, 
 		x0 + x_inset + wall_width, y0 + y_inset + wall_depth);
 }
 
-void draw_ball(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
+static void
+draw_ball(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
   double xc = c*tile_width + tile_width/2.0;
   double yc = r*tile_depth + tile_depth/2.0;
   cairo_matrix_t matrix;
@@ -116,7 +117,8 @@ void draw_ball(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
   cairo_restore(cr);
 }
 
-void draw_diamond(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
+static void
+draw_diamond(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
   double xc = c*tile_width + tile_width/2.0;
   double yc = r*tile_depth + tile_depth/2.0;
 
