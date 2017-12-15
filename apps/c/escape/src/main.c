@@ -17,16 +17,8 @@
 
 // Game logic processes at a tick rate of 60 Hz
 // We'll update graphics at the same rate, for 60 FPS
-#define GAME_TICK_INTERVAL (1.0/60.0)
-
-typedef struct _game {
-  int grid_width;
-  int grid_height;
-  int player_c;
-  int player_r;
-  int goal_c;
-  int goal_r;
-} game_t;
+//#define GAME_TICK_INTERVAL (1.0/60.0)
+#define GAME_TICK_INTERVAL (1.0/20.0)
 
 // TODO: Move to a header
 typedef unsigned char byte;
@@ -37,6 +29,16 @@ extern void create_maze(maze_t *maze, int width, int height);
 extern void print_maze_unicode(maze_t *maze);
 
 static cairo_t *cr;
+
+typedef struct _game {
+  maze_t maze;
+  int grid_width;
+  int grid_height;
+  int player_c;
+  int player_r;
+  int goal_c;
+  int goal_r;
+} game_t;
 static game_t game;
 
 static Evas_Object *source_image;  // TODO: Should Evas_Object* really be an Eo*?
@@ -276,20 +278,97 @@ _draw_screen() {
        draw_tile(cr, c, r, tile_width, tile_depth);
      }
    }
+
+   // Draw the maze walls
+   for (int c=0; c<game.grid_width; c++) {
+     for (int r=0; r<game.grid_height; r++) {
+       // TODO: Move this to a header shared with maze.c
+       enum { N = 1, S = 2, W = 4, E = 8, V = 16 };
+
+       byte tile = game.maze.cell[c][r];
+       switch (tile) {
+       case 0:
+       case 16:
+	 break;
+
+       case  1:	// Vertical wall
+       case  2:
+       case  3:
+	 draw_wall(cr, c, r, 0, wall_inset, wall_height, tile_width, tile_depth);
+	 break;
+
+       case  4: // Horizontal wall
+       case  8:
+       case 12:
+	 draw_wall(cr, c, r, wall_inset, 0, wall_height, tile_width, tile_depth);
+	 break;
+
+       case  5: // ┘
+       case  6: // ┐
+       case  7: // ┤
+       case  9: // └
+       case 10: // ┌
+       case 11: // ├
+       case 13: // ┴
+       case 14: // ┬
+       case 15: // ┼
+	 draw_wall(cr, c, r, 0, 0, wall_height, tile_width, tile_depth); // corner
+	 break;
+
+       case 17: // ┆
+       case 18: // ┆
+       case 19: // ┆
+       case 20: // ┄
+       case 21: // ╯
+       case 22: // ╮
+       case 23: //
+       case 24: // ┄
+       case 25: // ╰
+       case 26: // ╭
+       case 27: //
+       case 28: // ┄
+	 // TODO: solution path
+	 break;
+
+       default:
+	 printf("Error: Unknown tile\n");
+	 break;
+       }
+     }
+   }
+
+   /*
    draw_wall(cr, 0, 0,          0,          0, wall_height, tile_width, tile_depth); // corner
-   draw_wall(cr, 0, 1, wall_inset,          0, wall_height, tile_width, tile_depth);
    draw_wall(cr, 0, 2, wall_inset,          0, wall_height, tile_width, tile_depth);
    draw_wall(cr, 0, 3,          0,          0, wall_height, tile_width, tile_depth); // corner
-   draw_wall(cr, 1, 0,          0, wall_inset, wall_height, tile_width, tile_depth);
    draw_wall(cr, 1, 3,          0, wall_inset, wall_height, tile_width, tile_depth);
    draw_wall(cr, 2, 0,          0,          0, wall_height, tile_width, tile_depth); // corner
    draw_wall(cr, 2, 1, wall_inset,          0, wall_height, tile_width, tile_depth);
-   draw_wall(cr, 2, 3,          0,          0, wall_height, tile_width, tile_depth); // corner
+   */
 
    draw_ball(cr, game.player_c, game.player_r, tile_width, tile_depth);
    draw_diamond(cr, game.goal_c, game.goal_r, tile_width, tile_depth);
 
    efl_gfx_buffer_update_add(source_image, NULL);
+}
+
+static void
+_game_setup()
+{
+   int maze_width = 7;
+   int maze_height = 7;
+
+   create_maze(&game.maze, maze_width, maze_height);
+
+   // Grid size is 2*W+1, 2*H+1
+   game.grid_width = 2 * maze_width + 1;
+   game.grid_height = 2 * maze_height + 1;
+
+   // TODO: Derive from the maze's solution
+   game.player_c = 1;
+   game.player_r = 8;
+   game.goal_c = 6;
+   game.goal_r = 3;
 }
 
 static void
@@ -348,21 +427,6 @@ EAPI_MAIN void
 efl_main(void *data EINA_UNUSED, const Efl_Event *event)
 {
    Efl_Loop *loop = event->object;
-   int maze_width = 5;
-   int maze_height = 5;
-   maze_t maze;
-
-   create_maze(&maze, maze_width, maze_height);
-
-   // Grid size is 2*W+1, 2*H+1
-   game.grid_width = 2 * maze_width + 1;
-   game.grid_height = 2 * maze_height + 1;
-
-   // TODO: Derive from the maze's solution
-   game.player_c = 1;
-   game.player_r = 8;
-   game.goal_c = 6;
-   game.goal_r = 3;
 
    setlocale(LC_ALL, "");
    srandom(time(NULL));
@@ -373,6 +437,7 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *event)
 	   efl_loop_timer_interval_set(efl_added, GAME_TICK_INTERVAL),
 	   efl_event_callback_add(efl_added, EFL_LOOP_TIMER_EVENT_TICK, _game_tick_cb, NULL));
 
+   _game_setup();
    _gui_setup();
 }
 EFL_MAIN()
