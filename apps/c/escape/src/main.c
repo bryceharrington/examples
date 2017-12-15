@@ -19,6 +19,13 @@
 // We'll update graphics at the same rate, for 60 FPS
 #define GAME_TICK_INTERVAL (1.0/60.0)
 
+typedef struct _game {
+  int player_c;
+  int player_r;
+  int goal_c;
+  int goal_r;
+} game_t;
+
 // TODO: Move to a header
 typedef unsigned char byte;
 typedef struct _maze {
@@ -27,9 +34,10 @@ typedef struct _maze {
 extern void create_maze(maze_t *maze, int width, int height);
 extern void print_maze_unicode(maze_t *maze);
 
-static cairo_surface_t *surface;
 static cairo_t *cr;
 static game_t game;
+
+static Evas_Object *source_image;  // TODO: Should Evas_Object* really be an Eo*?
 
 static void
 draw_tile(cairo_t *cr, int c, int r, int tile_width, int tile_depth) {
@@ -203,18 +211,22 @@ _key_down_cb(void *data EINA_UNUSED, const Efl_Event *event EINA_UNUSED)
     case 'w':
     case 'W':
       printf("UP\n");
+      game.player_c -= 1;
       break;
     case 'a':
     case 'A':
       printf("LEFT\n");
+      game.player_r += 1;
       break;
     case 'd':
     case 'D':
       printf("RIGHT\n");
+      game.player_r -= 1;
       break;
     case 's':
     case 'S':
       printf("DOWN\n");
+      game.player_c += 1;
       break;
     default:
       printf("key=%s keyname=%s string=%s compose=%s",
@@ -237,17 +249,56 @@ EFL_CALLBACKS_ARRAY_DEFINE(key_callbacks,
 			   { EFL_EVENT_KEY_UP, _key_up_cb })
 
 static void
-_gui_setup()
-{
-   Eo *win, *box;
-   Evas_Object *source_image;  // TODO: Should Evas_Object* really be an Eo*?
-   unsigned char *cairo_pixels;
-   unsigned char *efl_pixels;
+_draw_screen() {
    cairo_matrix_t matrix;
    int tile_width = 40;
    int tile_depth = 40;
    int wall_height = 24;
    int wall_inset = 12;
+
+   // TODO: Technically only need to set up transform when surface is created
+   cairo_identity_matrix(cr);
+   cairo_matrix_init(&matrix,
+		     1, 0.5,
+		     -1, 0.5,
+		     0, -1);
+   cairo_translate(cr, 400, 50);
+   cairo_transform(cr, &matrix);
+
+   // Clear screen
+   cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+   cairo_paint(cr);
+
+   // Draw the grid
+   for (int c=0; c<10; c++) {
+     for (int r=0; r<10; r++) {
+       draw_tile(cr, c, r, tile_width, tile_depth);
+     }
+   }
+   draw_wall(cr, 0, 0,          0,          0, wall_height, tile_width, tile_depth); // corner
+   draw_wall(cr, 0, 1, wall_inset,          0, wall_height, tile_width, tile_depth);
+   draw_wall(cr, 0, 2, wall_inset,          0, wall_height, tile_width, tile_depth);
+   draw_wall(cr, 0, 3,          0,          0, wall_height, tile_width, tile_depth); // corner
+   draw_wall(cr, 1, 0,          0, wall_inset, wall_height, tile_width, tile_depth);
+   draw_wall(cr, 1, 3,          0, wall_inset, wall_height, tile_width, tile_depth);
+   draw_wall(cr, 2, 0,          0,          0, wall_height, tile_width, tile_depth); // corner
+   draw_wall(cr, 2, 1, wall_inset,          0, wall_height, tile_width, tile_depth);
+   draw_wall(cr, 2, 3,          0,          0, wall_height, tile_width, tile_depth); // corner
+
+   draw_ball(cr, game.player_c, game.player_r, tile_width, tile_depth);
+   draw_diamond(cr, game.goal_c, game.goal_r, tile_width, tile_depth);
+
+   efl_gfx_buffer_update_add(source_image, NULL);
+}
+
+static void
+_gui_setup()
+{
+   Eo *win, *box;
+   int stride;
+   Eina_Rw_Slice slice;
+   unsigned char *efl_pixels;
+   static cairo_surface_t *surface;
 
    win = efl_add(EFL_UI_WIN_CLASS, NULL,
 		 efl_ui_win_type_set(efl_added, EFL_UI_WIN_BASIC),
@@ -267,57 +318,19 @@ _gui_setup()
    efl_gfx_size_set(source_image, EINA_SIZE2D((WIDTH),  (HEIGHT)));
    efl_gfx_visible_set(source_image, EINA_TRUE);
 
-   surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, WIDTH, HEIGHT);
-   cr = cairo_create(surface);
-
-   cairo_matrix_init(&matrix,
-		     1, 0.5,
-		     -1, 0.5,
-		     0, -1);
-   cairo_translate(cr, 400, 50);
-   cairo_transform(cr, &matrix);
-   for (int c=0; c<10; c++) {
-     for (int r=0; r<10; r++) {
-       draw_tile(cr, c, r, tile_width, tile_depth);
-     }
-   }
-   draw_wall(cr, 0, 0,          0,          0, wall_height, tile_width, tile_depth); // corner
-   draw_wall(cr, 0, 1, wall_inset,          0, wall_height, tile_width, tile_depth);
-   draw_wall(cr, 0, 2, wall_inset,          0, wall_height, tile_width, tile_depth);
-   draw_wall(cr, 0, 3,          0,          0, wall_height, tile_width, tile_depth); // corner
-   draw_wall(cr, 1, 0,          0, wall_inset, wall_height, tile_width, tile_depth);
-   draw_wall(cr, 1, 3,          0, wall_inset, wall_height, tile_width, tile_depth);
-   draw_wall(cr, 2, 0,          0,          0, wall_height, tile_width, tile_depth); // corner
-   draw_wall(cr, 2, 1, wall_inset,          0, wall_height, tile_width, tile_depth);
-   draw_wall(cr, 2, 3,          0,          0, wall_height, tile_width, tile_depth); // corner
-
-   draw_ball(cr, 1, 8, tile_width, tile_depth);
-   draw_diamond(cr, 4, 3, tile_width, tile_depth);
-
-   cairo_pixels = cairo_image_surface_get_data(surface);
-
-   int stride;
-   Eina_Rw_Slice slice;
    slice = efl_gfx_buffer_map(source_image, EFL_GFX_BUFFER_ACCESS_MODE_WRITE, NULL,
 			      EFL_GFX_COLORSPACE_ARGB8888, 0, &stride);
    efl_pixels = slice.mem;
    if (!efl_pixels) return;
 
-   // Get pixels into source_image
-   // TODO: Isn't there a more direct way to do this?
-   int i, j;
-   for (i = 0; i<HEIGHT; i++) {
-      unsigned int *source_row = (unsigned int *)((char *)cairo_pixels + stride * i);
-      unsigned int *dest_row = (unsigned int *)((char *)efl_pixels + stride * i);
-
-      for (j = 0; j < WIDTH; j++) {
-	 // Copy cairo_pixels to efl_pixels
-	 *dest_row++ = (*source_row++) | 0xff000000;
-      }
-   }
+   surface = cairo_image_surface_create_for_data(efl_pixels,
+						 CAIRO_FORMAT_ARGB32,
+						 WIDTH,
+						 HEIGHT,
+						 stride);
+   cr = cairo_create(surface);
 
    efl_gfx_buffer_unmap(source_image, slice);
-   efl_gfx_buffer_update_add(source_image, NULL);
 }
 
 static void
@@ -327,6 +340,7 @@ _game_tick_cb(void *data EINA_UNUSED, const Efl_Event *event)
    // timer = event->object;
 
    //printf("\n[TICK]\n");
+   _draw_screen();
 }
 
 EAPI_MAIN void
@@ -336,6 +350,10 @@ efl_main(void *data EINA_UNUSED, const Efl_Event *event)
    maze_t maze;
 
    create_maze(&maze, 25, 15);
+   game.player_c = 1;
+   game.player_r = 8;
+   game.goal_c = 6;
+   game.goal_r = 3;
 
    setlocale(LC_ALL, "");
    srandom(time(NULL));
