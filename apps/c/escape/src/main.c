@@ -1,3 +1,6 @@
+#include <stdlib.h> // For srandom
+#include <locale.h> // For setlocale
+#include <time.h>   // For time
 #include <math.h>
 #include <cairo.h>
 
@@ -15,6 +18,14 @@
 // Game logic processes at a tick rate of 60 Hz
 // We'll update graphics at the same rate, for 60 FPS
 #define GAME_TICK_INTERVAL (1.0/60.0)
+
+// TODO: Move to a header
+typedef unsigned char byte;
+typedef struct _maze {
+  byte **cell;
+} maze_t;
+extern void create_maze(maze_t *maze, int width, int height);
+extern void print_maze_unicode(maze_t *maze);
 
 static cairo_surface_t *surface;
 static cairo_t *cr;
@@ -265,13 +276,19 @@ _game_tick_cb(void *data EINA_UNUSED, const Efl_Event *event)
    // Efl_Loop_Timer *timer;
    // timer = event->object;
 
-   printf("\n[TICK]\n");
+   //printf("\n[TICK]\n");
 }
 
 EAPI_MAIN void
 efl_main(void *data EINA_UNUSED, const Efl_Event *event)
 {
    Efl_Loop *loop = event->object;
+   maze_t maze;
+
+   create_maze(&maze, 25, 15);
+
+   setlocale(LC_ALL, "");
+   srandom(time(NULL));
 
    elm_policy_set(ELM_POLICY_QUIT, ELM_POLICY_QUIT_LAST_WINDOW_CLOSED);
 

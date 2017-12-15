@@ -1,5 +1,6 @@
 src = files([
   'main.c',
+  'maze.c'
 ])
 
 deps = [eina_dep, efl_dep, elm_dep, cairo_dep]
